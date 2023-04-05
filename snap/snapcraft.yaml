@@ -17,138 +17,84 @@ confinement: devmode
 apps:
   addr2line:
     command: usr/bin/riscv-none-elf-addr2line
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   ar:
     command: usr/bin/riscv-none-elf-ar
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   as:
     command: usr/bin/riscv-none-elf-as
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   cplusplus: # FIXME: c++
     command: usr/bin/riscv-none-elf-cplusplus # c++
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   cplusplus-filt: # FIXME c++filt
     command: usr/bin/riscv-none-elf-cplusplusfilt
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   cpp:
     command: usr/bin/riscv-none-elf-cpp
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   elfedit:
     command: usr/bin/riscv-none-elf-elfedit
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gplusplus: # FIXME g++
     command: usr/bin/riscv-none-elf-gplusplus # g++
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gcc:
     command: usr/bin/riscv-none-elf-gcc
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gcc-ar:
     command: usr/bin/riscv-none-elf-gcc-ar
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gcc-nm:
     command: usr/bin/riscv-none-elf-gcc-nm
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gcc-ranlib:
     command: usr/bin/riscv-none-elf-gcc-ranlib
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gcov:
     command: usr/bin/riscv-none-elf-gcov
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gcov-dump:
     command: usr/bin/riscv-none-elf-gcov-dump
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gcov-tool:
     command: usr/bin/riscv-none-elf-gcov-tool
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   gprof:
     command: usr/bin/riscv-none-elf-gprof
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   ld:
     command: usr/bin/riscv-none-elf-ld
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   ld-bfd: # FIXME ld.bfd
     command: usr/bin/riscv-none-elf-ld.bfd
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   lto-dump:
     command: usr/bin/riscv-none-elf-lto-dump
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   nm:
     command: usr/bin/riscv-none-elf-nm
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   objcopy:
     command: usr/bin/riscv-none-elf-objcopy
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   objdump:
     command: usr/bin/riscv-none-elf-objdump
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   ranlib:
     command: usr/bin/riscv-none-elf-ranlib
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   readelf:
     command: usr/bin/riscv-none-elf-readelf
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   size:
     command: usr/bin/riscv-none-elf-size
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   strings:
     command: usr/bin/riscv-none-elf-strings
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
   strip:
     command: usr/bin/riscv-none-elf-strip
-    environment:
-      "LD_LIBRARY_PATH": "$SNAP/usr/local/lib"
 
 parts:
   binutils:
@@ -159,24 +105,27 @@ parts:
       set -eux
       mkdir build
       cd build
-      ../configure \
-        --prefix=/usr \
-        --target=riscv-none-elf \
-        --program-prefix=riscv-none-elf- \
-        --program-suffix= \
-        --disable-nls \
-        --disable-gdb \
-        --disable-gdbtk \
-        --disable-sim \
-        --disable-werror \
-        --enable-initfini-array \
-        --enable-lto \
-        --enable-plugins \
-        --enable-build-warnings=no \
-        --without-gdb \
-        --without-x \
-        --without-tcl \
-        --without-tk \
+      ../configure                          \
+        --prefix="/usr"                     \
+        --with-build-sysroot="${SNAPCRAFT_STAGE}" \
+        --target=riscv-none-elf             \
+        --program-prefix=riscv-none-elf-    \
+                                            \
+        --disable-nls                       \
+        --disable-gdb                       \
+        --disable-gdbtk                     \
+        --disable-sim                       \
+        --disable-werror                    \
+                                            \
+        --enable-initfini-array             \
+        --enable-lto                        \
+        --enable-plugins                    \
+        --enable-build-warnings=no          \
+                                            \
+        --without-gdb                       \
+        --without-x                         \
+        --without-tcl                       \
+        --without-tk                        \
         --with-system-zlib
       make -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
       make install-strip DESTDIR="${SNAPCRAFT_PART_INSTALL}"
@@ -186,65 +135,101 @@ parts:
       - zlib1g-dev
       - texinfo
     stage-packages:
-      - zlib1g-dev
+      - zlib1g
+
+  gcc-source:
+    plugin: nil
+    source: https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.0/gcc-12.2.0.tar.gz
+    source-type: tar
+    override-pull: |
+      craftctl default
+      patch -p1 < $SNAPCRAFT_PROJECT_DIR/patches/gcc-12.2.0.patch.diff
+    override-build: |
+      cp --archive --link --no-dereference --update . "${SNAPCRAFT_PART_INSTALL}/gcc"
+    prime:
+      - -gcc
+
+  newlib-source:
+    plugin: nil
+    source: http://sourceware.org/pub/newlib/newlib-4.3.0.20230120.tar.gz
+    source-type: tar
+    override-build: |
+      cp --archive --link --no-dereference --update . "${SNAPCRAFT_PART_INSTALL}/newlib"
+    prime:
+      - -newlib
 
   gcc:
     after:
       - binutils
-    plugin: autotools
-    source-type: tar
-    source: https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.0/gcc-12.2.0.tar.gz
+      - gcc-source
+    plugin: nil
     override-build: |
-      ./contrib/download_prerequisites
-      mkdir build
-      cd build
-      ../configure \
-        --prefix=/usr \
-        --with-multilib-generator="rv32e-ilp32e--;rv32ea-ilp32e--;rv32eac-ilp32e--;rv32ec-ilp32e--;rv32em-ilp32e--;rv32ema-ilp32e--;rv32emac-ilp32e--;rv32emc-ilp32e--;rv32i-ilp32--;rv32ia-ilp32--;rv32iac-ilp32--;rv32iaf-ilp32f--;rv32iafc-ilp32f--;rv32iafd-ilp32d--;rv32iafdc-ilp32d--;rv32ic-ilp32--;rv32if-ilp32f--;rv32ifc-ilp32f--;rv32ifd-ilp32d--;rv32ifdc-ilp32d--;rv32im-ilp32--;rv32ima-ilp32--;rv32imaf-ilp32f--;rv32imafc-ilp32f--;rv32imafd-ilp32d--;rv32imafdc-ilp32d--;rv32imc-ilp32--;rv32imf-ilp32f--;rv32imfc-ilp32f--;rv32imfd-ilp32d--;rv32imfdc-ilp32d--;rv64i-lp64--;rv64ia-lp64--;rv64iac-lp64--;rv64iaf-lp64f--;rv64iafc-lp64f--;rv64iafd-lp64d--;rv64iafdc-lp64d--;rv64ic-lp64--;rv64if-lp64f--;rv64ifc-lp64f--;rv64ifd-lp64d--;rv64ifdc-lp64d--;rv64im-lp64--;rv64ima-lp64--;rv64imac-lp64--;rv64imaf-lp64f--;rv64imafc-lp64f--;rv64imafd-lp64d--;rv64imafdc-lp64d--;rv64imc-lp64--;rv64imf-lp64f--;rv64imfc-lp64f--;rv64imfd-lp64d--;rv64imfdc-lp64d--" \
-        --target=riscv-none-elf \
-        --disable-libgomp \
-        --disable-libmudflap \
-        --disable-libquadmath \
-        --disable-libsanitizer \
-        --disable-libssp \
-        --disable-nls \
-        --disable-shared \
-        --disable-threads \
-        --disable-tls \
-        --enable-checking=release \
-        --enable-languages=c,c++ \
-        --with-newlib \
-        --with-gnu-as \
-        --with-gnu-ld \
-        --with-system-zlib \
-        --with-abi=ilp32 \
-        --with-arch=rv32imac \
-        --enable-multilib
+      ${SNAPCRAFT_STAGE}/gcc/configure CFLAGS="-ffunction-sections -fdata-sections -O2" \
+        --prefix="/usr"                                             \
+                                                                    \
+        --target=riscv-none-elf                                     \
+        --with-multilib-generator="rv32ec_zicsr-ilp32e--"           \
+        --with-abi=ilp32e                                           \
+        --with-arch=rv32e_zicsr                                     \
+                                                                    \
+        --disable-libgomp                                           \
+        --disable-libmudflap                                        \
+        --disable-libquadmath                                       \
+        --disable-libsanitizer                                      \
+        --disable-libssp                                            \
+        --disable-nls                                               \
+        --disable-shared                                            \
+        --disable-threads                                           \
+        --disable-tls                                               \
+                                                                    \
+        --enable-multilib                                           \
+        --enable-checking=release                                   \
+        --enable-languages=c,c++                                    \
+                                                                    \
+        --with-newlib                                               \
+        --with-gnu-as                                               \
+        --with-gnu-ld                                               \
+        --with-system-zlib
       make all-gcc -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
-      make install-strip-gcc DESTDIR="${SNAPCRAFT_PART_INSTALL}"
+      make install-gcc DESTDIR="${SNAPCRAFT_PART_INSTALL}"
+      ln -srf ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-c++ ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-cplusplus
+      ln -srf ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-g++ ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-gplusplus
     build-packages:
+      - build-essential
       - python-is-python3
+      - libgmp-dev
+      - libmpfr-dev
+      - libmpc-dev
+      - libisl-dev
+    stage-packages:
+      - libgmp10
+      - libmpfr6
+      - libmpc3
+      - libisl23
+    prime:
+      - -naked
 
   newlib:
     after:
       - gcc
-    plugin: autotools
-    source-type: tar
-    source: http://sourceware.org/pub/newlib/newlib-4.3.0.20230120.tar.gz
-    build-environment:
-      - CFLAGS: -O3 -Ofast
+      - newlib-source
+    plugin: nil
     override-build: |
-      mkdir build
-      cd build
-      ../configure                          \
-        --prefix=/usr                       \
-        --target=riscv-none-elf             \
-        --disable-newlib-supplied-syscalls  \
-        --enable-newlib-io-c99-formats      \
-        --enable-newlib-io-long-long        \
-        --enable-newlib-mb                  \
-        --enable-newlib-reent-check-verify  \
-        --enable-newlib-register-fini       \
+      export PATH="${SNAPCRAFT_STAGE}/naked:$PATH"
+      export CFLAGS_FOR_TARGET="-ffunction-sections -fdata-sections -O2" 
+      ${SNAPCRAFT_STAGE}/newlib/configure         \
+        --prefix="/usr"                           \
+        --target=riscv-none-elf                   \
+                                                  \
+        --disable-newlib-supplied-syscalls        \
+        --disable-nls                             \
+                                                  \
+        --enable-newlib-io-c99-formats            \
+        --enable-newlib-io-long-long              \
+        --enable-newlib-io-long-double            \
+        --enable-newlib-mb                        \
+        --enable-newlib-reent-check-verify        \
+        --enable-newlib-register-fini             \
         --enable-newlib-retargetable-locking
       make -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
       make install-strip DESTDIR="${SNAPCRAFT_PART_INSTALL}"
@@ -252,309 +237,100 @@ parts:
   newlib-nano:
     after:
       - gcc
-    build-environment:
-      - CFLAGS: -Os -fno-exceptions
-    plugin: autotools
-    source-type: tar
-    source: http://sourceware.org/pub/newlib/newlib-4.3.0.20230120.tar.gz
+      - newlib-source
+    plugin: nil
     override-build: |
-      mkdir build
-      cd build
-      ../configure                            \
-        --prefix=/usr                         \
-        --program-suffix=_nano                \
-        --target=riscv-none-elf               \
-        --disable-newlib-fseek-optimization   \
-        --disable-newlib-fvwrite-in-streamio  \
-        --disable-newlib-supplied-syscalls    \
-        --disable-newlib-unbuf-stream-opt     \
-        --disable-newlib-wide-orient          \
-        --enable-lite-exit                    \
-        --enable-newlib-global-atexit         \
-        --enable-newlib-nano-formatted-io     \
-        --enable-newlib-nano-malloc           \
-        --enable-newlib-reent-check-verify    \
-        --enable-newlib-reent-small           \
-        --enable-newlib-retargetable-locking
+      export PATH="${SNAPCRAFT_STAGE}/naked:$PATH"
+      export CFLAGS_FOR_TARGET="-DPREFER_SIZE_OVER_SPEED -ffunction-sections -fdata-sections -Os -fno-exceptions"
+      ${SNAPCRAFT_STAGE}/newlib/configure         \
+        --prefix="/usr"                           \
+        --target=riscv-none-elf                   \
+                                                  \
+        --disable-newlib-fseek-optimization       \
+        --disable-newlib-fvwrite-in-streamio      \
+        --disable-newlib-supplied-syscalls        \
+        --disable-newlib-unbuf-stream-opt         \
+        --disable-newlib-wide-orient              \
+        --disable-newlib-retargetable-locking     \
+        --disable-nls                             \
+                                                  \
+        --enable-lite-exit                        \
+        --enable-newlib-global-atexit             \
+        --enable-newlib-nano-formatted-io         \
+        --enable-newlib-nano-malloc               \
+        --enable-newlib-reent-check-verify        \
+        --enable-newlib-reent-small
       make -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
-      make install-strip DESTDIR="${SNAPCRAFT_PART_INSTALL}"
+      make install-strip DESTDIR="${SNAPCRAFT_PART_INSTALL}/nano"
     organize:
-      usr/riscv-none-elf/include/newlib.h: usr/riscv-none-elf/include/newlib-nano/newlib.h
-      usr/riscv-none-elf/lib/libc.a: usr/riscv-none-elf/lib/libc_nano.a
-      usr/riscv-none-elf/lib/libg.a: usr/riscv-none-elf/lib/libg_nano.a
-      usr/riscv-none-elf/lib/libgloss.a: usr/riscv-none-elf/lib/libgloss_nano.a
-      usr/riscv-none-elf/lib/libm.a: usr/riscv-none-elf/lib/libm_nano.a
-      usr/riscv-none-elf/lib/rv32e/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32e/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32e/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32e/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32e/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32e/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32e/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32e/ilp32e/libm_nano.a
-      usr/riscv-none-elf/lib/rv32ea/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32ea/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ea/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32ea/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ea/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32ea/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ea/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32ea/ilp32e/libm_nano.a
-      usr/riscv-none-elf/lib/rv32eac/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32eac/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32eac/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32eac/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32eac/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32eac/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32eac/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32eac/ilp32e/libm_na
-      usr/riscv-none-elf/lib/rv32ec/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32ec/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ec/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32ec/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ec/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32ec/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ec/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32ec/ilp32e/libm_nano
-      usr/riscv-none-elf/lib/rv32em/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32em/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32em/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32em/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32em/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32em/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32em/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32em/ilp32e/libm_nano.a
-      usr/riscv-none-elf/lib/rv32ema/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32ema/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ema/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32ema/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ema/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32ema/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ema/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32ema/ilp32e/libm_nano.a
-      usr/riscv-none-elf/lib/rv32emac/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32emac/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32emac/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32emac/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32emac/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32emac/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32emac/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32emac/ilp32e/libm_na
-      usr/riscv-none-elf/lib/rv32emc/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32emc/ilp32e/libc_nano.a
-      usr/riscv-none-elf/lib/rv32emc/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32emc/ilp32e/libg_nano.a
-      usr/riscv-none-elf/lib/rv32emc/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32emc/ilp32e/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32emc/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32emc/ilp32e/lib
-      usr/riscv-none-elf/lib/rv32i/ilp32/libc.a: usr/riscv-none-elf/lib/rv32i/ilp32/libc_nano.a
-      usr/riscv-none-elf/lib/rv32i/ilp32/libg.a: usr/riscv-none-elf/lib/rv32i/ilp32/libg_nano.a
-      usr/riscv-none-elf/lib/rv32i/ilp32/libgloss.a: usr/riscv-none-elf/lib/rv32i/ilp32/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32i/ilp32/libm.a: usr/riscv-none-elf/lib/rv32i/ilp32/libm_nano.a
-      usr/riscv-none-elf/lib/rv32ia/ilp32/libc.a: usr/riscv-none-elf/lib/rv32ia/ilp32/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ia/ilp32/libg.a: usr/riscv-none-elf/lib/rv32ia/ilp32/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ia/ilp32/libgloss.a: usr/riscv-none-elf/lib/rv32ia/ilp32/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ia/ilp32/libm.a: usr/riscv-none-elf/lib/rv32ia/ilp32/libm_nano.a
-      usr/riscv-none-elf/lib/rv32iac/ilp32/libc.a: usr/riscv-none-elf/lib/rv32iac/ilp32/libc_nano.a
-      usr/riscv-none-elf/lib/rv32iac/ilp32/libg.a: usr/riscv-none-elf/lib/rv32iac/ilp32/libg_nano.a
-      usr/riscv-none-elf/lib/rv32iac/ilp32/libgloss.a: usr/riscv-none-elf/lib/rv32iac/ilp32/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32iac/ilp32/libm.a: usr/riscv-none-elf/lib/rv32iac/ilp32/libm_nano.a
-      usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32iaf_zicsr/ilp32f/libm_nano.a
-      usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32iafc_zicsr/ilp32f/libm_nano
-      usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32iafd_zicsr/ilp32d/libm_nano.a
-      usr/riscv-none-elf/lib/rv32iafdc_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32iafdc_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32iafdc_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32iafdc_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32iafdc_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32iafdc_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32iafdc_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32iafdc_zi
-      usr/riscv-none-elf/lib/rv32ic/ilp32/libc.a: usr/riscv-none-elf/lib/rv32ic/ilp32/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ic/ilp32/libg.a: usr/riscv-none-elf/lib/rv32ic/ilp32/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ic/ilp32/libgloss.a: usr/riscv-none-elf/lib/rv32ic/ilp32/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ic/ilp32/libm.a: usr/riscv-none-elf/lib/rv32ic/ilp32/libm_nano.a
-      usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32if_zicsr/ilp32f/libm_nano.a
-      usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32ifc_zicsr/ilp32f/libm_nano
-      usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32ifd_zicsr/ilp32d/libm_nano.a
-      usr/riscv-none-elf/lib/rv32ifdc_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32ifdc_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ifdc_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32ifdc_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ifdc_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32ifdc_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ifdc_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32ifdc_zics
-      usr/riscv-none-elf/lib/rv32im/ilp32/libc.a: usr/riscv-none-elf/lib/rv32im/ilp32/libc_nano.a
-      usr/riscv-none-elf/lib/rv32im/ilp32/libg.a: usr/riscv-none-elf/lib/rv32im/ilp32/libg_nano.a
-      usr/riscv-none-elf/lib/rv32im/ilp32/libgloss.a: usr/riscv-none-elf/lib/rv32im/ilp32/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32im/ilp32/libm.a: usr/riscv-none-elf/lib/rv32im/ilp32/libm_nano.a
-      usr/riscv-none-elf/lib/rv32ima/ilp32/libc.a: usr/riscv-none-elf/lib/rv32ima/ilp32/libc_nano.a
-      usr/riscv-none-elf/lib/rv32ima/ilp32/libg.a: usr/riscv-none-elf/lib/rv32ima/ilp32/libg_nano.a
-      usr/riscv-none-elf/lib/rv32ima/ilp32/libgloss.a: usr/riscv-none-elf/lib/rv32ima/ilp32/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32ima/ilp32/libm.a: usr/riscv-none-elf/lib/rv32ima/ilp32/libm_nano.a
-      usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32imaf_zicsr/ilp32f/libm_nano.a
-      usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32imafc_zicsr/ilp32f/libm_nano
-      usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32imafd_zicsr/ilp32d/libm_nano.a
-      usr/riscv-none-elf/lib/rv32imafdc_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32imafdc_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imafdc_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32imafdc_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imafdc_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32imafdc_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imafdc_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32imafdc_zi
-      usr/riscv-none-elf/lib/rv32imc/ilp32/libc.a: usr/riscv-none-elf/lib/rv32imc/ilp32/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imc/ilp32/libg.a: usr/riscv-none-elf/lib/rv32imc/ilp32/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imc/ilp32/libgloss.a: usr/riscv-none-elf/lib/rv32imc/ilp32/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imc/ilp32/libm.a: usr/riscv-none-elf/lib/rv32imc/ilp32/libm_nano.a
-      usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32imf_zicsr/ilp32f/libm_nano.a
-      usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libc.a: usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libg.a: usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libgloss.a: usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libm.a: usr/riscv-none-elf/lib/rv32imfc_zicsr/ilp32f/libm_nano
-      usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32imfd_zicsr/ilp32d/libm_nano.a
-      usr/riscv-none-elf/lib/rv32imfdc_zicsr/ilp32d/libc.a: usr/riscv-none-elf/lib/rv32imfdc_zicsr/ilp32d/libc_nano.a
-      usr/riscv-none-elf/lib/rv32imfdc_zicsr/ilp32d/libg.a: usr/riscv-none-elf/lib/rv32imfdc_zicsr/ilp32d/libg_nano.a
-      usr/riscv-none-elf/lib/rv32imfdc_zicsr/ilp32d/libgloss.a: usr/riscv-none-elf/lib/rv32imfdc_zicsr/ilp32d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv32imfdc_zicsr/ilp32d/libm.a: usr/riscv-none-elf/lib/rv32imfd
-      usr/riscv-none-elf/lib/rv64i/lp64/libc.a: usr/riscv-none-elf/lib/rv64i/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64i/lp64/libg.a: usr/riscv-none-elf/lib/rv64i/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64i/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64i/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64i/lp64/libm.a: usr/riscv-none-elf/lib/rv64i/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64ia/lp64/libc.a: usr/riscv-none-elf/lib/rv64ia/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64ia/lp64/libg.a: usr/riscv-none-elf/lib/rv64ia/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64ia/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64ia/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64ia/lp64/libm.a: usr/riscv-none-elf/lib/rv64ia/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64iac/lp64/libc.a: usr/riscv-none-elf/lib/rv64iac/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64iac/lp64/libg.a: usr/riscv-none-elf/lib/rv64iac/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64iac/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64iac/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64iac/lp64/libm.a: usr/riscv-none-elf/lib/rv64iac/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64iaf_zicsr/lp64f/libm_nano.a
-      usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64iafc_zicsr/lp64f/libm_nano
-      usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64iafd_zicsr/lp64d/libm_nano.a
-      usr/riscv-none-elf/lib/rv64iafdc_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64iafdc_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64iafdc_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64iafdc_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64iafdc_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64iafdc_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64iafdc_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64iafdc_z
-      usr/riscv-none-elf/lib/rv64ic/lp64/libc.a: usr/riscv-none-elf/lib/rv64ic/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64ic/lp64/libg.a: usr/riscv-none-elf/lib/rv64ic/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64ic/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64ic/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64ic/lp64/libm.a: usr/riscv-none-elf/lib/rv64ic/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64if_zicsr/lp64f/libm_nano.a
-      usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64ifc_zicsr/lp64f/libm_nano
-      usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64ifd_zicsr/lp64d/libm_nano.a
-      usr/riscv-none-elf/lib/rv64ifdc_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64ifdc_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64ifdc_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64ifdc_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64ifdc_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64ifdc_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64ifdc_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64ifdc_zic
-      usr/riscv-none-elf/lib/rv64im/lp64/libc.a: usr/riscv-none-elf/lib/rv64im/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64im/lp64/libg.a: usr/riscv-none-elf/lib/rv64im/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64im/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64im/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64im/lp64/libm.a: usr/riscv-none-elf/lib/rv64im/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64ima/lp64/libc.a: usr/riscv-none-elf/lib/rv64ima/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64ima/lp64/libg.a: usr/riscv-none-elf/lib/rv64ima/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64ima/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64ima/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64ima/lp64/libm.a: usr/riscv-none-elf/lib/rv64ima/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64imac/lp64/libc.a: usr/riscv-none-elf/lib/rv64imac/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imac/lp64/libg.a: usr/riscv-none-elf/lib/rv64imac/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imac/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64imac/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imac/lp64/libm.a: usr/riscv-none-elf/lib/rv64imac/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64imaf_zicsr/lp64f/libm_nano.a
-      usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64imafc_zicsr/lp64f/libm_nano
-      usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64imafd_zicsr/lp64d/libm_nano.a
-      usr/riscv-none-elf/lib/rv64imafdc_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64imafdc_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imafdc_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64imafdc_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imafdc_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64imafdc_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imafdc_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64imafdc_z
-      usr/riscv-none-elf/lib/rv64imc/lp64/libc.a: usr/riscv-none-elf/lib/rv64imc/lp64/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imc/lp64/libg.a: usr/riscv-none-elf/lib/rv64imc/lp64/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imc/lp64/libgloss.a: usr/riscv-none-elf/lib/rv64imc/lp64/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imc/lp64/libm.a: usr/riscv-none-elf/lib/rv64imc/lp64/libm_nano.a
-      usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64imf_zicsr/lp64f/libm_nano.a
-      usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libc.a: usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libg.a: usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libgloss.a: usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libm.a: usr/riscv-none-elf/lib/rv64imfc_zicsr/lp64f/libm_nano
-      usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64imfd_zicsr/lp64d/libm_nano.a
-      usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libc.a: usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libc_nano.a
-      usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libg.a: usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libg_nano.a
-      usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libgloss.a: usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libgloss_nano.a
-      usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libm.a: usr/riscv-none-elf/lib/rv64imfdc_zicsr/lp64d/libm_nano.a
+      nano/usr/riscv-none-elf/include/newlib.h: usr/riscv-none-elf/include/newlib-nano/newlib.h
+      nano/usr/riscv-none-elf/lib/libc.a: usr/riscv-none-elf/lib/libc_nano.a
+      nano/usr/riscv-none-elf/lib/libg.a: usr/riscv-none-elf/lib/libg_nano.a
+      nano/usr/riscv-none-elf/lib/libgloss.a: usr/riscv-none-elf/lib/libgloss_nano.a
+      nano/usr/riscv-none-elf/lib/libm.a: usr/riscv-none-elf/lib/libm_nano.a
+      nano/usr/riscv-none-elf/lib/rv32ec_zicsr/ilp32e/libc.a: usr/riscv-none-elf/lib/rv32ec_zicsr/ilp32e/libc_nano.a
+      nano/usr/riscv-none-elf/lib/rv32ec_zicsr/ilp32e/libg.a: usr/riscv-none-elf/lib/rv32ec_zicsr/ilp32e/libg_nano.a
+      nano/usr/riscv-none-elf/lib/rv32ec_zicsr/ilp32e/libgloss.a: usr/riscv-none-elf/lib/rv32ec_zicsr/ilp32e/libgloss_nano.a
+      nano/usr/riscv-none-elf/lib/rv32ec_zicsr/ilp32e/libm.a: usr/riscv-none-elf/lib/rv32ec/ilp32e_zicsr/libm_nano.a
     stage:
-      - -**/crt0.o
-      - -**/libnosys.a
-      - -**/libsemihost.a
+      - -nano
 
-  libgcc:
+  libs:
     after:
       - newlib
-      - newlib-nano
-    plugin: autotools
-    source-type: tar
-    source: https://gcc.gnu.org/pub/gcc/releases/gcc-12.2.0/gcc-12.2.0.tar.gz
+    plugin: nil
     override-build: |
-      ./contrib/download_prerequisites
-      mkdir build
-      cd build
-      ../configure \
-        --prefix=/usr \
-        --with-multilib-generator="rv32e-ilp32e--;rv32ea-ilp32e--;rv32eac-ilp32e--;rv32ec-ilp32e--;rv32em-ilp32e--;rv32ema-ilp32e--;rv32emac-ilp32e--;rv32emc-ilp32e--;rv32i-ilp32--;rv32ia-ilp32--;rv32iac-ilp32--;rv32iaf-ilp32f--;rv32iafc-ilp32f--;rv32iafd-ilp32d--;rv32iafdc-ilp32d--;rv32ic-ilp32--;rv32if-ilp32f--;rv32ifc-ilp32f--;rv32ifd-ilp32d--;rv32ifdc-ilp32d--;rv32im-ilp32--;rv32ima-ilp32--;rv32imaf-ilp32f--;rv32imafc-ilp32f--;rv32imafd-ilp32d--;rv32imafdc-ilp32d--;rv32imc-ilp32--;rv32imf-ilp32f--;rv32imfc-ilp32f--;rv32imfd-ilp32d--;rv32imfdc-ilp32d--;rv64i-lp64--;rv64ia-lp64--;rv64iac-lp64--;rv64iaf-lp64f--;rv64iafc-lp64f--;rv64iafd-lp64d--;rv64iafdc-lp64d--;rv64ic-lp64--;rv64if-lp64f--;rv64ifc-lp64f--;rv64ifd-lp64d--;rv64ifdc-lp64d--;rv64im-lp64--;rv64ima-lp64--;rv64imac-lp64--;rv64imaf-lp64f--;rv64imafc-lp64f--;rv64imafd-lp64d--;rv64imafdc-lp64d--;rv64imc-lp64--;rv64imf-lp64f--;rv64imfc-lp64f--;rv64imfd-lp64d--;rv64imfdc-lp64d--" \
-        --target=riscv-none-elf \
-        --disable-libgomp \
-        --disable-libmudflap \
-        --disable-libquadmath \
-        --disable-libsanitizer \
-        --disable-libssp \
-        --disable-nls \
-        --disable-shared \
-        --disable-threads \
-        --disable-tls \
-        --enable-checking=release \
-        --enable-languages=c,c++ \
-        --with-newlib \
-        --with-gnu-as \
-        --with-gnu-ld \
-        --with-system-zlib \
-        --with-abi=ilp32 \
-        --with-arch=rv32imac \
-        --enable-multilib
+      # Ugly work-around
+      ln -sf "${SNAPCRAFT_STAGE}/usr/riscv-none-elf/" /usr/riscv-none-elf
+      export PATH="${SNAPCRAFT_STAGE}/naked:$PATH"
+      ${SNAPCRAFT_STAGE}/gcc/configure CFLAGS="-ffunction-sections -fdata-sections -O2" \
+        --prefix="/usr"                                             \
+                                                                    \
+        --target=riscv-none-elf                                     \
+        --with-multilib-generator="rv32ec_zicsr-ilp32e--"           \
+        --with-abi=ilp32e                                           \
+        --with-arch=rv32e_zicsr                                     \
+                                                                    \
+        --disable-libgomp                                           \
+        --disable-libmudflap                                        \
+        --disable-libquadmath                                       \
+        --disable-libsanitizer                                      \
+        --disable-libssp                                            \
+        --disable-nls                                               \
+        --disable-shared                                            \
+        --disable-threads                                           \
+        --disable-tls                                               \
+                                                                    \
+        --enable-multilib                                           \
+        --enable-checking=release                                   \
+        --enable-languages=c++                                      \
+                                                                    \
+        --with-newlib                                               \
+        --with-gnu-as                                               \
+        --with-gnu-ld                                               \
+        --with-system-zlib
       make all-target-libgcc -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
       make install-strip-target-libgcc DESTDIR="${SNAPCRAFT_PART_INSTALL}"
+      make all-target-libstdc++-v3 -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
+      make install-strip-target-libstdc++-v3 DESTDIR="${SNAPCRAFT_PART_INSTALL}"
+      rm /usr/riscv-none-elf
+      # TODO: nano libstc++
     build-packages:
+      - build-essential
       - python-is-python3
+      - libgmp-dev
+      - libmpfr-dev
+      - libmpc-dev
+      - libisl-dev
 
   gdb:
     after:
-      - libgcc
+      - libs
     source: https://ftp.gnu.org/gnu/gdb/gdb-13.1.tar.xz
     source-type: tar
     plugin: autotools
     autotools-configure-parameters:
-      - "--prefix=/usr"
+      - "--prefix=${SNAPCRAFT_STAGE}/usr"
       - "--target=riscv-none-elf"
     build-packages:
       - libgmp-dev # FIXME: usare questa anche per GCC
@@ -575,11 +351,12 @@ parts:
     plugin: nil
     override-prime: |
       # FIXME questo dovrebbe andare in gcc
-      ln -sr ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-c++ ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-cplusplus
-      ln -sr ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-g++ ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-gplusplus
+      #ln -srf ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-c++ ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-cplusplus
+      #ln -srf ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-g++ ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-gplusplus
   # FIXME that branch is horrible.
   # openocd
 
 
   # firmware:
   #   plugin: make
+  # -ffat-lto-objects per newlib
