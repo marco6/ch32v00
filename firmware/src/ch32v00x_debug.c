@@ -10,7 +10,10 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <debug.h>
+#include <ch32v00x_debug.h>
+#include <ch32v00x_gpio.h>
+#include <ch32v00x_rcc.h>
+#include <ch32v00x_usart.h>
 
 static uint8_t  p_us = 0;
 static uint16_t p_ms = 0;
