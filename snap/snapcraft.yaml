@@ -10,10 +10,6 @@ grade: devel
 base: core22
 confinement: devmode 
 
-# TODO openocd
-# TODO compilare nano con -lto
-# TODO firmware (con -lto) 
-
 apps:
   addr2line:
     command: usr/bin/riscv-none-elf-addr2line
@@ -96,6 +92,15 @@ apps:
   strip:
     command: usr/bin/riscv-none-elf-strip
 
+  gdb:
+    command: usr/bin/riscv-none-elf-gdb
+
+  gdb-add-index:
+    command: usr/bin/riscv-none-elf-gdb-add-index
+    
+  run:
+    command: usr/bin/riscv-none-elf-run
+
 parts:
   binutils:
     plugin: autotools
@@ -173,7 +178,7 @@ parts:
         --target=riscv-none-elf                                     \
         --with-multilib-generator="rv32ec_zicsr-ilp32e--"           \
         --with-abi=ilp32e                                           \
-        --with-arch=rv32e_zicsr                                     \
+        --with-arch=rv32ec_zicsr                                    \
                                                                     \
         --disable-libgomp                                           \
         --disable-libmudflap                                        \
@@ -194,7 +199,7 @@ parts:
         --with-gnu-ld                                               \
         --with-system-zlib
       make all-gcc -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
-      make install-gcc DESTDIR="${SNAPCRAFT_PART_INSTALL}"
+      make install-strip-gcc DESTDIR="${SNAPCRAFT_PART_INSTALL}"
       ln -srf ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-c++ ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-cplusplus
       ln -srf ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-g++ ${SNAPCRAFT_PART_INSTALL}/usr/bin/riscv-none-elf-gplusplus
     build-packages:
@@ -209,17 +214,15 @@ parts:
       - libmpfr6
       - libmpc3
       - libisl23
-    prime:
-      - -naked
 
   newlib:
     after:
       - gcc
       - newlib-source
     plugin: nil
+    build-environment:
+      - CFLAGS_FOR_TARGET: "-ffunction-sections -fdata-sections -O2"
     override-build: |
-      export PATH="${SNAPCRAFT_STAGE}/naked:$PATH"
-      export CFLAGS_FOR_TARGET="-ffunction-sections -fdata-sections -O2" 
       ${SNAPCRAFT_STAGE}/newlib/configure         \
         --prefix="/usr"                           \
         --target=riscv-none-elf                   \
@@ -242,9 +245,9 @@ parts:
       - gcc
       - newlib-source
     plugin: nil
+    build-environment:
+      - CFLAGS_FOR_TARGET: "-DPREFER_SIZE_OVER_SPEED -ffunction-sections -fdata-sections -Os -fno-exceptions"
     override-build: |
-      export PATH="${SNAPCRAFT_STAGE}/naked:$PATH"
-      export CFLAGS_FOR_TARGET="-DPREFER_SIZE_OVER_SPEED -ffunction-sections -fdata-sections -Os -fno-exceptions"
       ${SNAPCRAFT_STAGE}/newlib/configure         \
         --prefix="/usr"                           \
         --target=riscv-none-elf                   \
@@ -285,14 +288,13 @@ parts:
     override-build: |
       # Ugly work-around
       ln -sf "${SNAPCRAFT_STAGE}/usr/riscv-none-elf/" /usr/riscv-none-elf
-      export PATH="${SNAPCRAFT_STAGE}/naked:$PATH"
       ${SNAPCRAFT_STAGE}/gcc/configure CFLAGS="-ffunction-sections -fdata-sections -O2" \
         --prefix="/usr"                                             \
                                                                     \
         --target=riscv-none-elf                                     \
         --with-multilib-generator="rv32ec_zicsr-ilp32e--"           \
         --with-abi=ilp32e                                           \
-        --with-arch=rv32e_zicsr                                     \
+        --with-arch=rv32ec_zicsr                                    \
                                                                     \
         --disable-libgomp                                           \
         --disable-libmudflap                                        \
@@ -317,7 +319,6 @@ parts:
       make all-target-libstdc++-v3 -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
       make install-strip-target-libstdc++-v3 DESTDIR="${SNAPCRAFT_PART_INSTALL}"
       rm /usr/riscv-none-elf
-      # TODO: nano libstc++
     build-packages:
       - build-essential
       - python-is-python3
@@ -326,6 +327,60 @@ parts:
       - libmpc-dev
       - libisl-dev
 
+  libs-nano:
+    after:
+      - newlib
+    plugin: nil
+    override-build: |
+      # Ugly work-around
+      ln -sf "${SNAPCRAFT_STAGE}/usr/riscv-none-elf/" /usr/riscv-none-elf
+      ${SNAPCRAFT_STAGE}/gcc/configure CFLAGS="-ffunction-sections -fdata-sections -Os -fno-exceptions" \
+        --prefix="/usr"                                             \
+                                                                    \
+        --target=riscv-none-elf                                     \
+        --with-multilib-generator="rv32ec_zicsr-ilp32e--"           \
+        --with-abi=ilp32e                                           \
+        --with-arch=rv32ec_zicsr                                    \
+                                                                    \
+        --disable-libgomp                                           \
+        --disable-libmudflap                                        \
+        --disable-libquadmath                                       \
+        --disable-libsanitizer                                      \
+        --disable-libssp                                            \
+        --disable-nls                                               \
+        --disable-shared                                            \
+        --disable-threads                                           \
+        --disable-tls                                               \
+                                                                    \
+        --enable-multilib                                           \
+        --enable-checking=release                                   \
+        --enable-languages=c++                                      \
+        --enable-target-optspace                                    \
+                                                                    \
+        --with-newlib                                               \
+        --with-gnu-as                                               \
+        --with-gnu-ld                                               \
+        --with-system-zlib
+      make all-target-libgcc -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
+      make install-strip-target-libgcc DESTDIR="${SNAPCRAFT_PART_INSTALL}/nano"
+      make all-target-libstdc++-v3 -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
+      make install-strip-target-libstdc++-v3 DESTDIR="${SNAPCRAFT_PART_INSTALL}/nano"
+      rm /usr/riscv-none-elf
+    build-packages:
+      - build-essential
+      - python-is-python3
+      - libgmp-dev
+      - libmpfr-dev
+      - libmpc-dev
+      - libisl-dev
+    organize:
+      nano/usr/lib/gcc/riscv-none-elf/12.2.0/libgcc.a: usr/lib/gcc/riscv-none-elf/12.2.0/libgcc_nano.a
+      nano/usr/lib/gcc/riscv-none-elf/12.2.0/libgcov.a: usr/lib/gcc/riscv-none-elf/12.2.0/libgcov_nano.a
+      nano/usr/riscv-none-elf/lib/libstdc++.a: usr/riscv-none-elf/lib/libstdc++_nano.a
+      nano/usr/riscv-none-elf/lib/libsupc++.a: usr/riscv-none-elf/lib/libsupc++_nano.a
+    stage:
+      - -nano
+
   gdb:
     after:
       - libs
@@ -333,10 +388,10 @@ parts:
     source-type: tar
     plugin: autotools
     autotools-configure-parameters:
-      - "--prefix=${SNAPCRAFT_STAGE}/usr"
+      - "--prefix=/usr"
       - "--target=riscv-none-elf"
     build-packages:
-      - libgmp-dev # FIXME: usare questa anche per GCC
+      - libgmp-dev
       - libexpat1-dev
       - liblzma-dev
       - libmpfr-dev
@@ -353,13 +408,9 @@ parts:
       - gdb
     plugin: nil
     override-prime: |
-      # FIXME questo dovrebbe andare in gcc
-      #ln -srf ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-c++ ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-cplusplus
-      #ln -srf ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-g++ ${SNAPCRAFT_PRIME}/usr/bin/riscv-none-elf-gplusplus
   # FIXME that branch is horrible.
   # openocd
 
 
   # firmware:
   #   plugin: make
-  # -ffat-lto-objects per newlib
