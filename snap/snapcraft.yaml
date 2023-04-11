@@ -153,6 +153,9 @@ parts:
     plugin: nil
     source: http://sourceware.org/pub/newlib/newlib-4.3.0.20230120.tar.gz
     source-type: tar
+    override-pull: |
+      craftctl default
+      patch -p1 < $SNAPCRAFT_PROJECT_DIR/patches/newlib-4.3.0.patch.diff
     override-build: |
       cp --archive --link --no-dereference --update . "${SNAPCRAFT_PART_INSTALL}/newlib"
     prime:
