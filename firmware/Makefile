@@ -1,5 +1,5 @@
 
-OPT = -Os 
+OPT = -Os -flto -ffat-lto-objects
 
 BUILD_DIR = build
 
@@ -30,11 +30,13 @@ src/ch32v00x_wwdg.c \
 ASM_SOURCES =  \
 src/ch32v00x_startup.S \
 
-CC = ch32v00x.gcc
-AR = ch32v00x.ar
-AS = ch32v00x.gcc -x assembler-with-cpp
-CP = ch32v00x.objcopy
-SZ = ch32v00x.size
+TARGET := riscv-none-elf-
+
+CC = $(TARGET)gcc
+AR = $(TARGET)gcc-ar
+AS = $(TARGET)gcc -x assembler-with-cpp
+CP = $(TARGET)objcopy
+SZ = $(TARGET)size
 
 CPU = -march=rv32ec_zicsr -mabi=ilp32e -msmall-data-limit=8
 
@@ -64,7 +66,6 @@ LIBDIR =
 
 # default action: build all
 all: libwch.a
-
 
 OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
