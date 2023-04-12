@@ -9,8 +9,8 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_rcc.h>
-#include <ch32v00x_wwdg.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/wwdg.h>
 
 /* CTLR register bit mask */
 #define CTLR_WDGA_Set      ((uint32_t)0x00000080)

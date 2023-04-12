@@ -7,7 +7,7 @@
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
-// #include <ch32v00x_it.h>
+// #include <ch32v00x/it.h>
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast"), weak));
 void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast"), weak));

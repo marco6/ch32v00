@@ -9,8 +9,8 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_i2c.h>
-#include <ch32v00x_rcc.h>
+#include <ch32v00x/i2c.h>
+#include <ch32v00x/rcc.h>
 
 /* I2C SPE mask */
 #define CTLR1_PE_Set             ((uint16_t)0x0001)

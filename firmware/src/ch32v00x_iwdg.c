@@ -9,7 +9,7 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_iwdg.h>
+#include <ch32v00x/iwdg.h>
 
 /* CTLR register bit mask */
 #define CTLR_KEY_Reload    ((uint16_t)0xAAAA)

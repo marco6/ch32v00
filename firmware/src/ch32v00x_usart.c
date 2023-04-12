@@ -9,8 +9,8 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_rcc.h>
-#include <ch32v00x_usart.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 /* USART_Private_Defines */
 #define CTLR1_UE_Set              ((uint16_t)0x2000) /* USART Enable Mask */

@@ -9,8 +9,8 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_adc.h>
-#include <ch32v00x_rcc.h>
+#include <ch32v00x/adc.h>
+#include <ch32v00x/rcc.h>
 
 /* ADC DISCNUM mask */
 #define CTLR1_DISCNUM_Reset              ((uint32_t)0xFFFF1FFF)

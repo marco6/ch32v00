@@ -105,26 +105,26 @@ install-headers:
 	# I could have written a proper glob, but I didn't wanted to: as much as I don't
 	# like them, I think autotools are the way to go here to support multilib properly
 	# (if it will be ever needed).
-	install -D -m 644 include/ch32v00x.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x.h
-	install -D -m 644 include/ch32v00x_adc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_adc.h
-	install -D -m 644 include/ch32v00x_core.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_core.h
-	install -D -m 644 include/ch32v00x_dbgmcu.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_dbgmcu.h
-	install -D -m 644 include/ch32v00x_debug.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_debug.h
-	install -D -m 644 include/ch32v00x_dma.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_dma.h
-	install -D -m 644 include/ch32v00x_exti.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_exti.h
-	install -D -m 644 include/ch32v00x_flash.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_flash.h
-	install -D -m 644 include/ch32v00x_gpio.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_gpio.h
-	install -D -m 644 include/ch32v00x_i2c.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_i2c.h
-	install -D -m 644 include/ch32v00x_iwdg.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_iwdg.h
-	install -D -m 644 include/ch32v00x_misc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_misc.h
-	install -D -m 644 include/ch32v00x_opa.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_opa.h
-	install -D -m 644 include/ch32v00x_pwr.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_pwr.h
-	install -D -m 644 include/ch32v00x_rcc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_rcc.h
-	install -D -m 644 include/ch32v00x_spi.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_spi.h
-	install -D -m 644 include/ch32v00x_system.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_system.h
-	install -D -m 644 include/ch32v00x_tim.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_tim.h
-	install -D -m 644 include/ch32v00x_usart.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_usart.h
-	install -D -m 644 include/ch32v00x_wwdg.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x_wwdg.h
+	install -D -m 644 include/ch32v00x/device.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/device.h
+	install -D -m 644 include/ch32v00x/adc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/adc.h
+	install -D -m 644 include/ch32v00x/core.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/core.h
+	install -D -m 644 include/ch32v00x/dbgmcu.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/dbgmcu.h
+	install -D -m 644 include/ch32v00x/debug.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/debug.h
+	install -D -m 644 include/ch32v00x/dma.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/dma.h
+	install -D -m 644 include/ch32v00x/exti.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/exti.h
+	install -D -m 644 include/ch32v00x/flash.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/flash.h
+	install -D -m 644 include/ch32v00x/gpio.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/gpio.h
+	install -D -m 644 include/ch32v00x/i2c.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/i2c.h
+	install -D -m 644 include/ch32v00x/iwdg.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/iwdg.h
+	install -D -m 644 include/ch32v00x/misc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/misc.h
+	install -D -m 644 include/ch32v00x/opa.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/opa.h
+	install -D -m 644 include/ch32v00x/pwr.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/pwr.h
+	install -D -m 644 include/ch32v00x/rcc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/rcc.h
+	install -D -m 644 include/ch32v00x/spi.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/spi.h
+	install -D -m 644 include/ch32v00x/system.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/system.h
+	install -D -m 644 include/ch32v00x/tim.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/tim.h
+	install -D -m 644 include/ch32v00x/usart.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/usart.h
+	install -D -m 644 include/ch32v00x/wwdg.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/wwdg.h
 
 
 clean:

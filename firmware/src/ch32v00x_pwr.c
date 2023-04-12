@@ -9,8 +9,8 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_pwr.h>
-#include <ch32v00x_rcc.h>
+#include <ch32v00x/pwr.h>
+#include <ch32v00x/rcc.h>
 
 /* PWR registers bit mask */
 /* CTLR register bit mask */

@@ -9,7 +9,7 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_rcc.h>
+#include <ch32v00x/rcc.h>
 
 /* RCC registers bit address in the alias region */
 #define RCC_OFFSET                 (RCC_BASE - PERIPH_BASE)

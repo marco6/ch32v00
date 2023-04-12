@@ -9,7 +9,7 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_exti.h>
+#include <ch32v00x/exti.h>
 
 /* No interrupt selected */
 #define EXTI_LINENONE    ((uint32_t)0x00000)

@@ -66,8 +66,8 @@ typedef enum IRQn
 #define HardFault_IRQn    EXC_IRQn
 
 #include <stdint.h>
-#include <ch32v00x_core.h>
-#include <ch32v00x_system.h>
+#include <ch32v00x/core.h>
+#include <ch32v00x/system.h>
 
 /* Standard Peripheral Library old definitions (maintained for legacy purpose) */
 #define HSI_Value             HSI_VALUE
@@ -2393,7 +2393,7 @@ typedef struct
 #define EXTEN_OPA_NSEL                          ((uint32_t)0x00020000)
 #define EXTEN_OPA_PSEL                          ((uint32_t)0x00040000)
 
-// #include <ch32v00x_conf.h>
+// #include <ch32v00x/conf.h>
 
 #ifdef __cplusplus
 }

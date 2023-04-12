@@ -9,7 +9,7 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_flash.h>
+#include <ch32v00x/flash.h>
 
 /* Flash Access Control Register bits */
 #define ACR_LATENCY_Mask           ((uint32_t)0x00000038)

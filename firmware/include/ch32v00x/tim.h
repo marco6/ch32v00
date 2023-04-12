@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#include <ch32v00x.h>
+#include <ch32v00x/device.h>
 
 /* TIM Time Base Init structure definition */
 typedef struct

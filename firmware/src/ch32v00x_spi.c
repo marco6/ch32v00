@@ -9,8 +9,8 @@
  * Attention: This software (modified or not) and binary are used for 
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include <ch32v00x_rcc.h>
-#include <ch32v00x_spi.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/spi.h>
 
 /* SPI SPE mask */
 #define CTLR1_SPE_Set         ((uint16_t)0x0040)
