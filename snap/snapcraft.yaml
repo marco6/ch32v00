@@ -403,6 +403,13 @@ parts:
     stage:
       - -usr/share/info/
 
+  firmware:
+    after:
+      - libs
+    source: firmware
+    source-type: local
+    plugin: make
+
   cleanup:
     after:
       - gdb

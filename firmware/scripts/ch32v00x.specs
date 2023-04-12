@@ -1,0 +1,35 @@
+%rename lib				ch32v00x_lib
+%rename link				ch32v00x_link
+%rename cpp				ch32v00x_cpp
+%rename cc1				ch32v00x_cc1
+%rename cc1plus				ch32v00x_cc1plus
+%rename link_gcc_c_sequence		ch32v00x_link_gcc_c_sequence
+
+
+*ch32v00x_cpu:
+-march=rv32ec_zicsr -mabi=ilp32e -msmall-data-limit=8
+
+*ch32v00x_gc:
+-fdata-sections -ffunction-sections
+
+*cpp:
+-isystem %R/include/newlib-nano %(ch32v00x_cpp) 
+
+*cc1:
+%(ch32v00x_cc1) %(ch32v00x_cpu) %(ch32v00x_gc)
+
+*cc1plus:
+%(ch32v00x_cc1plus) %(ch32v00x_cpu) %(ch32v00x_gc)
+
+*link_gcc_c_sequence: 
+%(ch32v00x_link_gcc_c_sequence) --start-group -lnosys -lm_nano -lwch --end-group
+
+*startfile:
+ch32v00x_crt0%O%s
+
+*link:
+%(ch32v00x_link) %(ch32v00x_mcu) %L ch32v00x.ld%T --gc-sections %:replace-outfile(-lstdc++ -lstdc++_nano) %{lwch:-porconejflsdds} %:replace-outfile(-lwch -lc) %:replace-outfile(-lsupc++ -lsupc++_nano) %:replace-outfile(-lc -lc_nano) %:replace-outfile(-lg -lg_nano) %:replace-outfile(-lm -lm_nano)
+
+*lib:
+%{!shared:%{g*:-lg_nano} %{!p:%{!pg:-lc_nano}}%{p:-lc_p}%{pg:-lc_p}}
+
