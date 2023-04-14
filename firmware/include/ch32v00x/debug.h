@@ -14,11 +14,10 @@
 #define __DEBUG_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
-#include <ch32v00x/device.h>
-#include <stdio.h>
+#include <stdint.h>
 
 /* UART Printf Definition */
 #define DEBUG_UART1    1

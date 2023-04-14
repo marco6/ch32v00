@@ -1,37 +1,27 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
 /*
- *@Note
- ADC DMA sampling routine:
- ADC channel 2 (PC4), the rule group channel obtains ADC conversion data for 10 consecutive
-  times through DMA.
+ * ADC DMA sampling routine:
+ * ADC channel 2 (PC4), the rule group channel obtains ADC conversion data for 10 consecutive
+ * times through DMA.
+ */
 
-*/
+#include <ch32v00x/adc.h>
+#include <ch32v00x/debug.h>
+#include <ch32v00x/dma.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/rcc.h>
 
-#include "debug.h"
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
 
 /* Global Variable */
-u16 TxBuf[10];
+uint16_t TxBuf[10];
 
-/*********************************************************************
- * @fn      ADC_Function_Init
- *
- * @brief   Initializes ADC collection.
- *
- * @return  none
+/**
+ * Initializes ADC collection.
  */
-void ADC_Function_Init(void)
-{
+void ADC_Function_Init(void) {
     ADC_InitTypeDef  ADC_InitStructure = {0};
     GPIO_InitTypeDef GPIO_InitStructure = {0};
 
@@ -62,57 +52,36 @@ void ADC_Function_Init(void)
     while(ADC_GetCalibrationStatus(ADC1));
 }
 
-/*********************************************************************
- * @fn      Get_ADC_Val
+/**
+ * Returns ADCx conversion result data.
  *
- * @brief   Returns ADCx conversion result data.
- *
- * @param   ch - ADC channel.
- *            ADC_Channel_0 - ADC Channel0 selected.
- *            ADC_Channel_1 - ADC Channel1 selected.
- *            ADC_Channel_2 - ADC Channel2 selected.
- *            ADC_Channel_3 - ADC Channel3 selected.
- *            ADC_Channel_4 - ADC Channel4 selected.
- *            ADC_Channel_5 - ADC Channel5 selected.
- *            ADC_Channel_6 - ADC Channel6 selected.
- *            ADC_Channel_7 - ADC Channel7 selected.
- *            ADC_Channel_8 - ADC Channel8 selected.
- *            ADC_Channel_9 - ADC Channel9 selected.
- *
- * @return  none
+ * @param ch ADC channel among ADC_Channel_x macros where x between
+ * 0 and 9.
  */
-u16 Get_ADC_Val(u8 ch)
-{
-    u16 val;
-
+uint16_t Get_ADC_Val(uint8_t ch) {
     ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_241Cycles);
     ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 
-    while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC));
-    val = ADC_GetConversionValue(ADC1);
+    while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) { }
 
-    return val;
+    return ADC_GetConversionValue(ADC1);
 }
 
-/*********************************************************************
- * @fn      DMA_Tx_Init
+/**
+ * Initializes the DMAy Channelx configuration.
  *
- * @brief   Initializes the DMAy Channelx configuration.
- *
- * @param   DMA_CHx - x can be 1 to 7.
- *          ppadr - Peripheral base address.
- *          memadr - Memory base address.
- *          bufsize - DMA channel buffer size.
- *
- * @return  none
+ * @param channel DMA channel among the DMA_CHx macros where x can be 
+ * 1 to 7.
+ * @param ppadr Peripheral base address.
+ * @param memadr Memory base address.
+ * @param bufsize DMA channel buffer size.
  */
-void DMA_Tx_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsize)
-{
+void DMA_Tx_Init(DMA_Channel_TypeDef *channel, u32 ppadr, u32 memadr, uint16_t bufsize) {
     DMA_InitTypeDef DMA_InitStructure = {0};
 
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 
-    DMA_DeInit(DMA_CHx);
+    DMA_DeInit(channel);
     DMA_InitStructure.DMA_PeripheralBaseAddr = ppadr;
     DMA_InitStructure.DMA_MemoryBaseAddr = memadr;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
@@ -124,27 +93,19 @@ void DMA_Tx_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsiz
     DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
     DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
     DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-    DMA_Init(DMA_CHx, &DMA_InitStructure);
+    DMA_Init(channel, &DMA_InitStructure);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
-    u16 i;
+int main(void) {
+    uint16_t i;
 
     Delay_Init();
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     ADC_Function_Init();
 
-    DMA_Tx_Init(DMA1_Channel1, (u32)&ADC1->RDATAR, (u32)TxBuf, 10);
+    DMA_Tx_Init(DMA1_Channel1, (uint32_t)&ADC1->RDATAR, (uint32_t)TxBuf, 10);
     DMA_Cmd(DMA1_Channel1, ENABLE);
 
     ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 1, ADC_SampleTime_241Cycles);
@@ -152,10 +113,10 @@ int main(void)
     Delay_Ms(50);
     ADC_SoftwareStartConvCmd(ADC1, DISABLE);
 
-    for(i = 0; i < 10; i++){
-        printf("%04d\r\n", TxBuf[i]);
+    for (i = 0; i < 10; i++) {
+        printf("%04"PRIu16"\n", TxBuf[i]);
         Delay_Ms(10);
     }
 
-    while(1);
+    while(1) { } // FIXME this should be in the outro from the library.
 }

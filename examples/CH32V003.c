@@ -1,6 +1,7 @@
-/*
- * GPIO routine:
- * PD0 push-pull output.
+
+/**
+ *GPIO routine:
+ *PD0 push-pull output.
  */
 
 #include <ch32v00x/debug.h>
@@ -12,9 +13,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-/**
- * Initializes GPIOA.0
- */
 void GPIO_Toggle_INIT(void) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
 
@@ -33,7 +31,6 @@ int main(void) {
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
-    printf("GPIO Toggle TEST\n");
     GPIO_Toggle_INIT();
 
     while(1) {

@@ -1,38 +1,26 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
 /*
- *@Note
- External lines trigger ADC conversion routine:
- ADC channel 2 (PC4) - rule group channel, external trigger pin (PD3) high level
- triggers EXTI line 3 event,In this mode, an ADC conversion is triggered by an
- event on the EXTI line 3, and an EOC interrupt is generated after the conversion
-  is completed.
-
-*/
-
-#include "debug.h"
-
-/* Global Variable */
-
-/*********************************************************************
- * @fn      ADC_Function_Init
- *
- * @brief   Initializes ADC collection.
- *
- * @return  none
+ * External lines trigger ADC conversion routine:
+ * ADC channel 2 (PC4) - rule group channel, external trigger pin (PD3) high level
+ * triggers EXTI line 3 event,In this mode, an ADC conversion is triggered by an
+ * event on the EXTI line 3, and an EOC interrupt is generated after the conversion
+ * is completed.
  */
-void ADC_Function_Init(void)
-{
+
+#include <ch32v00x/adc.h>
+#include <ch32v00x/debug.h>
+#include <ch32v00x/exti.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/misc.h>
+#include <ch32v00x/rcc.h>
+
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+/**
+ * Initializes ADC collection.
+ */
+void ADC_Function_Init(void) {
     ADC_InitTypeDef  ADC_InitStructure = {0};
     GPIO_InitTypeDef GPIO_InitStructure = {0};
     NVIC_InitTypeDef NVIC_InitStructure = {0};
@@ -69,20 +57,16 @@ void ADC_Function_Init(void)
     ADC_Cmd(ADC1, ENABLE);
 
     ADC_ResetCalibration(ADC1);
-    while(ADC_GetResetCalibrationStatus(ADC1));
+    while(ADC_GetResetCalibrationStatus(ADC1)) { }
+
     ADC_StartCalibration(ADC1);
-    while(ADC_GetCalibrationStatus(ADC1));
+    while(ADC_GetCalibrationStatus(ADC1)) { }
 }
 
-/*********************************************************************
- * @fn      EXTI_Event_Init
- *
- * @brief   Initializes EXTI.
- *
- * @return  none
+/**
+ * Initializes EXTI.
  */
-void EXTI_Event_Init(void)
-{
+void EXTI_Event_Init(void) {
     EXTI_InitTypeDef EXTI_InitStructure = {0};
     GPIO_InitTypeDef GPIO_InitStructure = {0};
 
@@ -102,42 +86,29 @@ void EXTI_Event_Init(void)
     EXTI_Init(&EXTI_InitStructure);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
+int main(void) {
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     EXTI_Event_Init();
     ADC_Function_Init();
 
-    while(1);
+    while(1) { }  // FIXME this should be in the outro from the library.
 }
 
 void ADC1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
-/*********************************************************************
- * @fn      ADC1_IRQHandler
- *
- * @brief   ADC1 Interrupt Service Function.
- *
- * @return  none
+/**
+ * ADC1 Interrupt Service Function.
+ * FIXME understood the name, but what does it do and why?
  */
-void ADC1_IRQHandler(void)
-{
-    u16 ADC_val;
+void ADC1_IRQHandler(void) {
+    uint16_t ADC_val;
 
-    if(ADC_GetITStatus(ADC1, ADC_IT_EOC))
-    {
-        printf("ADC Extline trigger conversion...\r\n");
+    if(ADC_GetITStatus(ADC1, ADC_IT_EOC)) {
+        printf("ADC Extline trigger conversion...\n");
         ADC_val = ADC_GetConversionValue(ADC1);
-        printf("ADC-%04d\r\n", ADC_val);
+        printf("ADC-%04d\n", ADC_val);
     }
 
     ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);

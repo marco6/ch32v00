@@ -1,38 +1,23 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
-/*
- *@Note
- External interrupt line routine:
- EXTI_Line0(PD0)
- PD0 sets the pull-up input, and the falling edge triggers the interrupt.
-
-*/
-
-#include "debug.h"
-
-/* Global define */
-
-/* Global Variable */
-
-/*********************************************************************
- * @fn      EXTI0_INT_INIT
- *
- * @brief   Initializes EXTI0 collection.
- *
- * @return  none
+/**
+ * External interrupt line routine:
+ * EXTI_Line0(PD0)
+ * PD0 sets the pull-up input, and the falling edge triggers the interrupt.
  */
-void EXTI0_INT_INIT(void)
-{
+
+#include <ch32v00x/debug.h>
+#include <ch32v00x/exti.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/misc.h>
+#include <ch32v00x/rcc.h>
+
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+/**
+ * Initializes EXTI0 collection.
+ */
+void EXTI0_INT_INIT(void) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
     EXTI_InitTypeDef EXTI_InitStructure = {0};
     NVIC_InitTypeDef NVIC_InitStructure = {0};
@@ -58,47 +43,30 @@ void EXTI0_INT_INIT(void)
     NVIC_Init(&NVIC_InitStructure);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
+int main(void) {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     Delay_Init();
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
-    printf("EXTI0 Test\r\n");
+    printf("EXTI0 Test\n");
     EXTI0_INT_INIT();
 
-    while(1)
-    {
+    while(1) {
         Delay_Ms(1000);
-        printf("Run at main\r\n");
+        printf("Run at main\n");
     }
 }
 
 
 void EXTI7_0_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
-/*********************************************************************
- * @fn      EXTI0_IRQHandler
- *
- * @brief   This function handles EXTI0 Handler.
- *
- * @return  none
+/**
+ * This function handles EXTI0 Handler.
  */
-void EXTI7_0_IRQHandler(void)
-{
-  if(EXTI_GetITStatus(EXTI_Line0)!=RESET)
-  {
-    printf("Run at EXTI\r\n");
-    EXTI_ClearITPendingBit(EXTI_Line0);     /* Clear Flag */
-  }
+void EXTI7_0_IRQHandler(void) {
+    if(EXTI_GetITStatus(EXTI_Line0)!=RESET) {
+        printf("Run at EXTI\n");
+        EXTI_ClearITPendingBit(EXTI_Line0);     /* Clear Flag */
+    }
 }
-
-

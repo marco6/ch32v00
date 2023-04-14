@@ -1,35 +1,24 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
 /*
- *@Note
- Discontinuous mode routine:
- ADC channel 2 (PC4) - injection group channel, channel 3 (PD2) - injection group channel,
- channel 4 (PD3) - injection group channel, this mode Next, an ADC conversion is triggered
- by the TIM1_CC3 event, and each channel of the above-mentioned injection group is converted in turn.
-
-*/
-
-#include "debug.h"
-
-/*********************************************************************
- * @fn      ADC_Function_Init
- *
- * @brief   Initializes ADC collection.
- *
- * @return  none
+ * Discontinuous mode routine:
+ * ADC channel 2 (PC4) - injection group channel, channel 3 (PD2) - injection group channel,
+ * channel 4 (PD3) - injection group channel, this mode Next, an ADC conversion is triggered
+ * by the TIM1_CC3 event, and each channel of the above-mentioned injection group is converted in turn.
  */
-void ADC_Function_Init(void)
-{
+
+#include <ch32v00x/adc.h>
+#include <ch32v00x/debug.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/tim.h>
+
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+/**
+ * Initializes ADC collection.
+ */
+void ADC_Function_Init(void) {
     ADC_InitTypeDef  ADC_InitStructure = {0};
     GPIO_InitTypeDef GPIO_InitStructure = {0};
 
@@ -75,19 +64,14 @@ void ADC_Function_Init(void)
     while(ADC_GetCalibrationStatus(ADC1));
 }
 
-/*********************************************************************
- * @fn      TIM1_PWM_In
+/**
+ * Initializes TIM1 PWM output.
  *
- * @brief   Initializes TIM1 PWM output.
- *
- * @param   arr - the period value.
- *          psc - the prescaler value.
- *          ccp - the pulse value.
- *
- * @return  none
+ * @param arr the period value.
+ * @param psc the prescaler value.
+ * @param ccp the pulse value.
  */
-void TIM1_PWM_In(u16 arr, u16 psc, u16 ccp)
-{
+void TIM1_PWM_In(uint16_t arr, uint16_t psc, uint16_t ccp) {
     GPIO_InitTypeDef        GPIO_InitStructure = {0};
     TIM_OCInitTypeDef       TIM_OCInitStructure = {0};
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
@@ -118,34 +102,24 @@ void TIM1_PWM_In(u16 arr, u16 psc, u16 ccp)
     TIM_Cmd(TIM1, ENABLE);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
+int main(void) {
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     ADC_Function_Init();
 
     TIM1_PWM_In(1000, 48000 - 1, 500);
 
-    while(1)
-    {
-        while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC));
+    while(1) {
+        while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) { }
         ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
-        while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_JEOC));
+        
+        while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_JEOC)) { }
         ADC_ClearFlag(ADC1, ADC_FLAG_JEOC);
 
-        printf("ADC Discontinuous injected group conversion...\r\n");
-        printf("%04d\r\n", ADC1->IDATAR1);
-        printf("%04d\r\n", ADC1->IDATAR2);
-        printf("%04d\r\n", ADC1->IDATAR3);
+        printf("ADC Discontinuous injected group conversion...\n");
+        printf("%04"PRIu32"\n", ADC1->IDATAR1);
+        printf("%04"PRIu32"\n", ADC1->IDATAR2);
+        printf("%04"PRIu32"\n", ADC1->IDATAR3);
     }
 }
-
-

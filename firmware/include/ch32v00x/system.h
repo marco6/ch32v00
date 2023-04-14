@@ -10,6 +10,8 @@
 #ifndef __SYSTEM_CH32V00x_H
 #define __SYSTEM_CH32V00x_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
  extern "C" {
 #endif 

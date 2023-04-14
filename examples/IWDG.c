@@ -18,37 +18,37 @@ This routine demonstrates the pull-down input of the PC1 pin. When the input is 
 
 */
 
-#include "debug.h"
+#include <ch32v00x/debug.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/iwdg.h>
+#include <ch32v00x/rcc.h>
 
-#define KEY0 GPIO_ReadInputDataBit( GPIOC, GPIO_Pin_1)  //PA0
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
 
-/*********************************************************************
- * @fn      KEY_Init
- *
- * @brief   Initializes KEY GPIO.
- *
- * @return  none
+#define KEY0 GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_1)  //PA0
+
+/**
+ * Initializes KEY GPIO.
  */
-void KEY_Init(void)
-{
+void KEY_Init(void) {
     GPIO_InitTypeDef GPIO_InitStructure={0};
 
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC, ENABLE );
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
     GPIO_Init( GPIOC, &GPIO_InitStructure);
 }
 
-/*********************************************************************
- * @fn      KEY_PRESS
- *
- * @brief   Key processing funcation.
+/**
+ * Key processing funcation.
  *
  * @return  0 - Press the key.
  *          1 - Release Key.
  */
-u8 KEY_PRESS(void)
+uint8_t KEY_PRESS(void)
 {
     if(KEY0 == 1)
     {
@@ -60,56 +60,36 @@ u8 KEY_PRESS(void)
     return 0;
 }
 
-/*********************************************************************
- * @fn      IWDG_Init
+/**
+ * Initializes IWDG.
  *
- * @brief   Initializes IWDG.
- *
- * @param   IWDG_Prescaler: specifies the IWDG Prescaler value.
- *            IWDG_Prescaler_4: IWDG prescaler set to 4.
- *            IWDG_Prescaler_8: IWDG prescaler set to 8.
- *            IWDG_Prescaler_16: IWDG prescaler set to 16.
- *            IWDG_Prescaler_32: IWDG prescaler set to 32.
- *            IWDG_Prescaler_64: IWDG prescaler set to 64.
- *            IWDG_Prescaler_128: IWDG prescaler set to 128.
- *            IWDG_Prescaler_256: IWDG prescaler set to 256.
- *          Reload: specifies the IWDG Reload value.
- *            This parameter must be a number between 0 and 0x0FFF.
- *
- * @return  none
+ * @param IWDG_Prescaler: can be any of the IWDG_Prescaler_x macros
+ * where x is 4, 8, 16, 32, 64, 128 or 256;
+ * @param Reload: specifies the IWDG Reload value. It must be a 
+ * number between 0 and 0x0FFF.
  */
-void IWDG_Feed_Init(u16 prer, u16 rlr)
-{
+void IWDG_Feed_Init(uint16_t prer, uint16_t rlr) {
     IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
     IWDG_SetPrescaler(prer);
     IWDG_SetReload(rlr);
     IWDG_ReloadCounter();
     IWDG_Enable();
 }
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
+
+int main(void) {
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n",SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n",SystemCoreClock);
 
     Delay_Init();
     KEY_Init();
-    printf("IWDG test...\r\n");
+    printf("IWDG test...\n");
     Delay_Ms(1000);
 
     IWDG_Feed_Init( IWDG_Prescaler_128, 4000 );   // 4s IWDG reset
 
-    while(1)
-    {
-        if( KEY_PRESS() == 1 )  //PC1
-        {
-            printf("Feed dog\r\n");
+    while(1) {
+        if(KEY_PRESS() == 1) {
+            printf("Feed dog\n");
             IWDG_ReloadCounter();   //Feed dog
             Delay_Ms(10);
         }

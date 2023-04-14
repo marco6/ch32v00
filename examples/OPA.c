@@ -23,24 +23,21 @@
  Note: When using PD7, the reset function of this pin needs to be turned off.
 */
 
-#include "debug.h"
+#include <ch32v00x/adc.h>
+#include <ch32v00x/debug.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/misc.h>
+#include <ch32v00x/opa.h>
+#include <ch32v00x/rcc.h>
 
-/* Global define */
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
 
-
-/* Global Variable */
-
-
-
-/*********************************************************************
- * @fn      OPA1_Init
- *
- * @brief   Initializes OPA collection.
- *
- * @return  none
+/**
+ * Initializes OPA collection.
  */
-void OPA1_Init( void )
-{
+void OPA1_Init(void) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
     OPA_InitTypeDef  OPA_InitStructure = {0};
 
@@ -56,29 +53,23 @@ void OPA1_Init( void )
     OPA_InitStructure.NSEL = CHN1;
     OPA_Init( &OPA_InitStructure );
     OPA_Cmd( ENABLE );
-
 }
 
-/*********************************************************************
- * @fn      ADC_Channel7_Init
- *
- * @brief   Initializes ADC Channel7 collection.
- *
- * @return  none
+/**
+ * Initializes ADC Channel7 collection.
  */
-void ADC_Channel7_Init( void )
-{
+void ADC_Channel7_Init(void) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
     ADC_InitTypeDef ADC_InitStructure = {0};
 
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOD, ENABLE );
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_ADC1, ENABLE );
-    RCC_ADCCLKConfig( RCC_PCLK2_Div8 );
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+    RCC_ADCCLKConfig(RCC_PCLK2_Div8);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init( GPIOD, &GPIO_InitStructure );
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
 
     ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
     ADC_InitStructure.ADC_ScanConvMode = DISABLE;
@@ -86,106 +77,66 @@ void ADC_Channel7_Init( void )
     ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
     ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
     ADC_InitStructure.ADC_NbrOfChannel = 1;
-    ADC_Init( ADC1, &ADC_InitStructure );
+    ADC_Init(ADC1, &ADC_InitStructure);
 
     ADC_Calibration_Vol(ADC1, ADC_CALVOL_50PERCENT);
-    ADC_Cmd( ADC1, ENABLE );
+    ADC_Cmd(ADC1, ENABLE);
 
     ADC_ResetCalibration(ADC1);
-    while(ADC_GetResetCalibrationStatus(ADC1));
+    while(ADC_GetResetCalibrationStatus(ADC1)) { }
+
     ADC_StartCalibration(ADC1);
-    while(ADC_GetCalibrationStatus(ADC1));
+    while(ADC_GetCalibrationStatus(ADC1)) { }
 }
 
-/*********************************************************************
- * @fn      Get_ADC_Val
+/**
+ * Returns ADCx conversion result data.
  *
- * @brief   Returns ADCx conversion result data.
- *
- * @param   ch - ADC channel.
- *            ADC_Channel_0 - ADC Channel0 selected.
- *            ADC_Channel_1 - ADC Channel1 selected.
- *            ADC_Channel_2 - ADC Channel2 selected.
- *            ADC_Channel_3 - ADC Channel3 selected.
- *            ADC_Channel_4 - ADC Channel4 selected.
- *            ADC_Channel_5 - ADC Channel5 selected.
- *            ADC_Channel_6 - ADC Channel6 selected.
- *            ADC_Channel_7 - ADC Channel7 selected.
- *
- * @return  none
+ * @param ch ADC channel among ADC_Channel_x macros where x between
+ * 0 and 9.
  */
-u16 Get_ADC_Val( u8 ch )
-{
-    u16 val;
+uint16_t Get_ADC_Val(uint8_t ch) {
+    ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_241Cycles);
+    ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 
-    ADC_RegularChannelConfig( ADC1, ch, 1, ADC_SampleTime_241Cycles );
-    ADC_SoftwareStartConvCmd( ADC1, ENABLE );
+    while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) { }
 
-    while( !ADC_GetFlagStatus( ADC1, ADC_FLAG_EOC ) );
-
-    val = ADC_GetConversionValue( ADC1 );
-
-    return val;
+    return ADC_GetConversionValue(ADC1);
 }
 
-/*********************************************************************
- * @fn      Get_ADC_Average
+/**
+ * Returns ADCx conversion result average data.
  *
- * @brief   Returns ADCx conversion result average data.
- *
- * @param   ch - ADC channel.
- *            ADC_Channel_0 - ADC Channel0 selected.
- *            ADC_Channel_1 - ADC Channel1 selected.
- *            ADC_Channel_2 - ADC Channel2 selected.
- *            ADC_Channel_3 - ADC Channel3 selected.
- *            ADC_Channel_4 - ADC Channel4 selected.
- *            ADC_Channel_5 - ADC Channel5 selected.
- *            ADC_Channel_6 - ADC Channel6 selected.
- *            ADC_Channel_7 - ADC Channel7 selected.
- *
- * @return  val - The Data conversion value.
+ * @param ch ADC channel among ADC_Channel_x macros where x between
+ * 0 and 9.
  */
-u16 Get_ADC_Average( u8 ch, u8 times )
-{
-    u32 temp_val = 0;
-    u8 t;
-    u16 val;
+uint16_t Get_ADC_Average(uint8_t ch, uint8_t times) {
+    uint32_t temp_val = 0;
 
-    for( t = 0; t < times; t++ ){
-        temp_val += Get_ADC_Val( ch );
-        Delay_Ms( 5 );
+    for(uint8_t t = 0; t < times; t++){
+        temp_val += Get_ADC_Val(ch);
+        Delay_Ms(5);
     }
 
-    val = temp_val / times;
-
-    return val;
+    return (int16_t)(temp_val / times);
 }
 
-
-/*********************************************************************
- * @fn      main
- *
- * @brief   ADC_Channel0_Init
- *
- * @return  none
- */
-int main( void )
-{
-    u16 ADC_val, i;
+int main( void ) {
+    uint16_t ADC_val, i;
 
     Delay_Init();
-    USART_Printf_Init( 115200 );
-    printf( "SystemClk:%d\r\n", SystemCoreClock );
-    printf( "OPA Test\r\n" );
+    USART_Printf_Init(115200);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
+    printf("OPA Test\n");
+    
     OPA1_Init();
     ADC_Channel7_Init();
 
-    while( 1 )
-    {
-        for( i = 0; i < 6; i++ ){
-            ADC_val = Get_ADC_Average( ADC_Channel_7, 10 );
-            printf( "OPA_OUT:%04d\r\n", ADC_val );
-            Delay_Ms( 500 );
+    while(1) {
+        for(i = 0; i < 6; i++) {
+            ADC_val = Get_ADC_Average(ADC_Channel_7, 10);
+            printf("OPA_OUT:%04d\n", ADC_val);
+            Delay_Ms(500);
         }
     }
 }

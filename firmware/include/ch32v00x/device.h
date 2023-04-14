@@ -16,6 +16,11 @@
 extern "C" {
 #endif
 
+#include <ch32v00x/core.h>
+#include <ch32v00x/system.h>
+
+#include <stdint.h>
+
 #define __MPU_PRESENT             0  /* Other CH32 devices does not provide an MPU */
 #define __Vendor_SysTickConfig    0  /* Set to 1 if different SysTick Config is used */
 
@@ -64,10 +69,6 @@ typedef enum IRQn
 } IRQn_Type;
 
 #define HardFault_IRQn    EXC_IRQn
-
-#include <stdint.h>
-#include <ch32v00x/core.h>
-#include <ch32v00x/system.h>
 
 /* Standard Peripheral Library old definitions (maintained for legacy purpose) */
 #define HSI_Value             HSI_VALUE
