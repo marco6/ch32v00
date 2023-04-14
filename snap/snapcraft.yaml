@@ -97,9 +97,13 @@ apps:
 
   gdb-add-index:
     command: usr/bin/riscv-none-elf-gdb-add-index
-    
+
   run:
     command: usr/bin/riscv-none-elf-run
+
+  example:
+    command: usr/riscv-none-elf/share/example.sh
+    completer: : usr/riscv-none-elf/share/example.comp.sh
 
 parts:
   binutils:
@@ -410,14 +414,20 @@ parts:
     source-type: local
     plugin: make
 
+  examples:
+    after:
+      - firmware
+    source: examples
+    source-type: local
+    plugin: nil
+    override-build: |
+      cp --archive --link --no-dereference --update . "${SNAPCRAFT_PART_INSTALL}/usr/riscv-none-elf/share/"
+
   cleanup:
     after:
       - gdb
     plugin: nil
     override-prime: |
-  # FIXME that branch is horrible.
-  # openocd
 
-
-  # firmware:
-  #   plugin: make
+# FIXME that branch is horrible.
+# openocd
