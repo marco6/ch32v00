@@ -22,7 +22,16 @@ _chv3200x_example()
         COMPREPLY=( $( compgen -W '-c -o -h --help' -- "$cur" ))
         ;;
     *)  
-        COMPREPLY=( $( compgen -W 'OPA RCC/MCO RCC/Get_CLK ADC/Auto_Injection ADC/DMA ADC/AnalogWatchdog ADC/Discontinuous_mode ADC/ExtLines_Trigger USART/Polling USART/Printf USART/DMA USART/Interrupt USART/HalfDuplex USART/SynchronousMode USART/MultiProcessorCommunication USART/HardwareFlowControl DMA TIM/Synchro_ExtTrigger TIM/Synchro_Timer TIM/DMA TIM/ComplementaryOutput_DeadTime TIM/Output_Compare_Mode TIM/Input_Capture TIM/ExtTrigger_Start_Two_Timer TIM/One_Pulse TIM/PWM_Output TIM/Clock_Select EXTI GPIO IWDG SYSTICK_Interrupt CH32V003 SPI/FullDuplex_HardNSS SPI/2Lines_FullDuplex SPI/DMA SPI/CRC SPI/1Lines_half-duplex I2C/DMA I2C/7bit_Mode I2C/EEPROM I2C/10bit_Mode I2C/PEC IAP/V00x_APP FLASH WWDG PWR/Sleep_Mode PWR/Standby_Mode' -- "$cur" ))
+        COMPREPLY=( $( compgen -W 'pwr/standby_mode pwr/sleep_mode ch32v003 wwdg \
+            iwdg flash gpio iap/v00x_app i2c/pec i2c/eeprom i2c/7bit_mode i2c/10bit_mode \
+            i2c/dma spi/full-duplex-hard-nss spi/crc spi/half-duplex spi/full-duplex \
+            spi/dma systick_interrupt tim/synchro_ext_trigger tim/input_capture \
+            tim/synchro_timer tim/pwm tim/output_compare_mode tim/complementary_output_dead_time \
+            tim/clock_select tim/one_pulse tim/dma tim/ext_trigger_start_two_timers \
+            usart/interrupt usart/hardware_flow_control usart/multi_processor usart/printf \
+            usart/synchronous_mode usart/half-duplex usart/polling usart/dma adc/analog_watchdog \
+            adc/ext_line_trigger adc/discontinuous_mode adc/auto_injection adc/dma opa exti \
+            rcc/get_clk rcc/mco dma' -- "$cur" ))
         ;;
     esac
 
