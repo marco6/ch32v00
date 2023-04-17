@@ -4,6 +4,9 @@
 /prime/
 
 *.snap
+.vscode
+
+TODO
 
 .snapcraft
 __pycache__
@@ -13,4 +16,7 @@ snap/.snapcraft
 
 *.o
 *.a
+a.out
 build/
+
+CH32V003_IAP
