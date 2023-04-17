@@ -40,7 +40,6 @@ void Option_Byte_CFG(void) {
     FLASH_Lock();
 }
 
-
 /**
  * Flash Program Test.
  */
@@ -50,10 +49,10 @@ void Flash_Test(void) {
 
     NbrOfPage = (PAGE_WRITE_END_ADDR - PAGE_WRITE_START_ADDR) / FLASH_PAGE_SIZE;
 
-    if((WRPR_Value & FLASH_PAGES_TO_BE_PROTECTED) != 0x00) {
+    if ((WRPR_Value & FLASH_PAGES_TO_BE_PROTECTED) != 0x00) {
         FLASH_ClearFlag(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_WRPRTERR);
 
-        for(EraseCounter = 0; (EraseCounter < NbrOfPage) && (FLASHStatus == FLASH_COMPLETE); EraseCounter++) {
+        for (EraseCounter = 0; (EraseCounter < NbrOfPage) && (FLASHStatus == FLASH_COMPLETE); EraseCounter++) {
             FLASHStatus = FLASH_ErasePage(PAGE_WRITE_START_ADDR + (FLASH_PAGE_SIZE * EraseCounter));
             if(FLASHStatus != FLASH_COMPLETE) {
                 printf("FLASH Erase ERR at Page%"PRIu32"\n", EraseCounter + 60);
@@ -64,8 +63,8 @@ void Flash_Test(void) {
 
         Address = PAGE_WRITE_START_ADDR;
         printf("Erase Cheking...\n");
-        while((Address < PAGE_WRITE_END_ADDR) && (MemoryEraseStatus != FAILED)) {
-            if((*(__IO uint16_t *)Address) != 0xFFFF) {
+        while ((Address < PAGE_WRITE_END_ADDR) && (MemoryEraseStatus != FAILED)) {
+            if ((*(__IO uint16_t *)Address) != 0xFFFF) {
                 MemoryEraseStatus = FAILED;
             }
 
@@ -90,14 +89,14 @@ void Flash_Test(void) {
         Address = PAGE_WRITE_START_ADDR;
         printf("Program Cheking...\n");
 
-        while((Address < PAGE_WRITE_END_ADDR) && (MemoryProgramStatus != FAILED)) {
-            if((*(__IO uint16_t *)Address) != Data) {
+        while ((Address < PAGE_WRITE_END_ADDR) && (MemoryProgramStatus != FAILED)) {
+            if ((*(__IO uint16_t *)Address) != Data) {
                 MemoryProgramStatus = FAILED;
             }
             Address += 2;
         }
 
-        if(MemoryProgramStatus == FAILED) {
+        if (MemoryProgramStatus == FAILED) {
             printf("Memory Program FAIL!\n");
             printf("\n");
         } else {
@@ -116,9 +115,9 @@ void Flash_Test(void) {
  * Flash Fast Program Test.
  */
 void Flash_Test_Fast(void) {
-    uint8_t i, verity_flag = 0;
+    uint8_t verity_flag = 0;
 
-    for (i = 0; i < 16; i++) {
+    for (uint8_t i = 0; i < 16; i++) {
         buf[i] = i;
     }
 
@@ -129,7 +128,7 @@ void Flash_Test_Fast(void) {
     printf("64Byte Page Erase Suc\n");
 
     FLASH_BufReset();
-    for (i = 0; i < 16; i++) {
+    for (uint8_t i = 0; i < 16; i++) {
         FLASH_BufLoad(0x08003000+4*i, buf[i]);
     }
 
@@ -139,8 +138,8 @@ void Flash_Test_Fast(void) {
 
     FLASH_Lock_Fast();
 
-    for(i = 0; i < 16; i++) {
-        if(buf[i] == *(uint32_t *)(0x08003000 + 4 * i)) {
+    for (uint8_t i = 0; i < 16; i++) {
+        if (buf[i] == *(uint32_t *)(0x08003000 + 4 * i)) {
             verity_flag = 0;
         } else {
             verity_flag = 1;
@@ -148,15 +147,14 @@ void Flash_Test_Fast(void) {
         }
     }
 
-    if(verity_flag) {
+    if (verity_flag) {
         printf("64Byte Page Verity Fail\n");
     } else {
         printf("64Byte Page Verity Suc\n");
     }
 }
 
-int main(void)
-{
+int main(void) {
     Delay_Init();
     Delay_Ms(1000);
     USART_Printf_Init(115200);

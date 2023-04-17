@@ -11,6 +11,7 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #define BUF_SIZE 32
 
@@ -24,29 +25,6 @@ uint32_t source[BUF_SIZE] = {0x01020304, 0x05060708, 0x090A0B0C, 0x0D0E0F10,
                          0x71727374, 0x75767778, 0x797A7B7C, 0x7D7E7F80};
 
 uint32_t destination[BUF_SIZE] = {0};
-uint8_t  flag = 0;
-
-/**
- * Compares the buffers for equality
- *
- * @param buf1 pointer of buf1
- * @param buf2 pointer of buf2
- * @param buflength length to compare
- *
- * @return  1 when equal, 0 when different
- */
-uint8_t BufEqual(uint32_t *buf1, uint32_t *buf2, uint16_t buflength) {
-    while(buflength--) {
-        if(*buf1 != *buf2) {
-            return 0;
-        }
-
-        buf1++;
-        buf2++;
-    }
-
-    return 1;
-}
 
 /**
  * Initializes Channel3 of DMA1 collection.
@@ -74,8 +52,6 @@ void DMA1_CH3_Init(void) {
 }
 
 int main(void) {
-    uint8_t i = 0;
-
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     Delay_Init();
     USART_Printf_Init(115200);
@@ -86,20 +62,20 @@ int main(void) {
 
     while(DMA_GetFlagStatus(DMA1_FLAG_TC3) == RESET) { }
 
-    flag = BufEqual(source, destination, BUF_SIZE);
-    if(flag == 0) {
+    int diff = memcmp(source, destination, BUF_SIZE);
+    if (diff) {
         printf("DMA Transfer Fail\n");
     } else {
         printf("DMA Transfer Success\n");
     }
 
     printf("SRC_BUF:\n");
-    for(i = 0; i < BUF_SIZE; i++) {
+    for (uint8_t i = 0; i < BUF_SIZE; i++) {
         printf("\t0x%08"PRIx32"\n", source[i]);
     }
 
     printf("DST_BUF:\n");
-    for(i = 0; i < BUF_SIZE; i++){
+    for (uint8_t i = 0; i < BUF_SIZE; i++){
         printf("\t0x%08"PRIx32"\n", destination[i]);
     }
 

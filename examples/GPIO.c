@@ -36,7 +36,7 @@ int main(void) {
     printf("GPIO Toggle TEST\n");
     GPIO_Toggle_INIT();
 
-    while(1) {
+    while (1) {
         Delay_Ms(250);
         GPIO_WriteBit(GPIOD, GPIO_Pin_0, (i == 0) ? (i = Bit_SET) : (i = Bit_RESET));
     }

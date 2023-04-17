@@ -52,7 +52,7 @@ int main(void) {
     printf("EXTI0 Test\n");
     EXTI0_INT_INIT();
 
-    while(1) {
+    while (1) {
         Delay_Ms(1000);
         printf("Run at main\n");
     }
@@ -60,12 +60,8 @@ int main(void) {
 
 
 void EXTI7_0_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-
-/**
- * This function handles EXTI0 Handler.
- */
 void EXTI7_0_IRQHandler(void) {
-    if(EXTI_GetITStatus(EXTI_Line0)!=RESET) {
+    if (EXTI_GetITStatus(EXTI_Line0) != RESET) {
         printf("Run at EXTI\n");
         EXTI_ClearITPendingBit(EXTI_Line0);     /* Clear Flag */
     }

@@ -33,13 +33,13 @@ This routine demonstrates the pull-down input of the PC1 pin. When the input is 
  * Initializes KEY GPIO.
  */
 void KEY_Init(void) {
-    GPIO_InitTypeDef GPIO_InitStructure={0};
+    GPIO_InitTypeDef GPIO_InitStructure = { 0 };
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
-    GPIO_Init( GPIOC, &GPIO_InitStructure);
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
 }
 
 /**
@@ -48,13 +48,14 @@ void KEY_Init(void) {
  * @return  0 - Press the key.
  *          1 - Release Key.
  */
-uint8_t KEY_PRESS(void)
-{
-    if(KEY0 == 1)
-    {
+uint8_t KEY_PRESS(void) {
+    if (KEY0 == 1) {
         Delay_Ms(10);
-        if(KEY0 == 1) return 1;
-        else return 0;
+        if (KEY0 == 1) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     return 0;
@@ -87,8 +88,8 @@ int main(void) {
 
     IWDG_Feed_Init( IWDG_Prescaler_128, 4000 );   // 4s IWDG reset
 
-    while(1) {
-        if(KEY_PRESS() == 1) {
+    while (1) {
+        if (KEY_PRESS() == 1) {
             printf("Feed dog\n");
             IWDG_ReloadCounter();   //Feed dog
             Delay_Ms(10);

@@ -41,18 +41,18 @@ void OPA1_Init(void) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
     OPA_InitTypeDef  OPA_InitStructure = {0};
 
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOD, ENABLE );
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    GPIO_Init( GPIOD, &GPIO_InitStructure );
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-    GPIO_Init( GPIOD, &GPIO_InitStructure );
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
 
     OPA_InitStructure.PSEL = CHP1;
     OPA_InitStructure.NSEL = CHN1;
-    OPA_Init( &OPA_InitStructure );
-    OPA_Cmd( ENABLE );
+    OPA_Init(&OPA_InitStructure);
+    OPA_Cmd(ENABLE);
 }
 
 /**
@@ -83,10 +83,10 @@ void ADC_Channel7_Init(void) {
     ADC_Cmd(ADC1, ENABLE);
 
     ADC_ResetCalibration(ADC1);
-    while(ADC_GetResetCalibrationStatus(ADC1)) { }
+    while (ADC_GetResetCalibrationStatus(ADC1)) { }
 
     ADC_StartCalibration(ADC1);
-    while(ADC_GetCalibrationStatus(ADC1)) { }
+    while (ADC_GetCalibrationStatus(ADC1)) { }
 }
 
 /**
@@ -99,7 +99,7 @@ uint16_t Get_ADC_Val(uint8_t ch) {
     ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_241Cycles);
     ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 
-    while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) { }
+    while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) { }
 
     return ADC_GetConversionValue(ADC1);
 }
@@ -113,7 +113,7 @@ uint16_t Get_ADC_Val(uint8_t ch) {
 uint16_t Get_ADC_Average(uint8_t ch, uint8_t times) {
     uint32_t temp_val = 0;
 
-    for(uint8_t t = 0; t < times; t++){
+    for (uint8_t t = 0; t < times; t++){
         temp_val += Get_ADC_Val(ch);
         Delay_Ms(5);
     }
@@ -121,8 +121,8 @@ uint16_t Get_ADC_Average(uint8_t ch, uint8_t times) {
     return (int16_t)(temp_val / times);
 }
 
-int main( void ) {
-    uint16_t ADC_val, i;
+int main(void) {
+    uint16_t ADC_val;
 
     Delay_Init();
     USART_Printf_Init(115200);
@@ -132,8 +132,8 @@ int main( void ) {
     OPA1_Init();
     ADC_Channel7_Init();
 
-    while(1) {
-        for(i = 0; i < 6; i++) {
+    while (1) {
+        for (uint8_t i = 0; i < 6; i++) {
             ADC_val = Get_ADC_Average(ADC_Channel_7, 10);
             printf("OPA_OUT:%04d\n", ADC_val);
             Delay_Ms(500);

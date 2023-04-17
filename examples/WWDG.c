@@ -66,14 +66,16 @@ int main(void) {
 
     wwdg_wr = WWDG->CFGR & 0x7F;
 
-    while(1) {
+    while (1) {
         Delay_Ms(10);
 
         printf("**********\n");
+
         wwdg_tr = WWDG->CTLR & 0x7F;
         if(wwdg_tr < wwdg_wr) {
             WWDG_Feed();
         }
+
         printf("##########\n");
     }
 }
