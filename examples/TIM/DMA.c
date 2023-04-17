@@ -1,44 +1,34 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
+/**
+ * Timer DMA routines:
+ *  TIM1_CH1(PD2)
+ * This example demonstrates using DMA to output PWM through TIM1_CH1(PD2) pin.
+ */
 
-/*
- *@Note
-Timer DMA routines:
- TIM1_CH1(PD2)
-This example demonstrates using DMA to output PWM through TIM1_CH1(PD2) pin.
+#include <ch32v00x/debug.h>
+#include <ch32v00x/dma.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/tim.h>
 
-*/
-
-#include "debug.h"
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
 
 /* CH1CVR register Definition */
+// FIXME why this is defined here?
 #define TIM1_CH1CVR_ADDRESS    0x40012C34
 
 /* Private variables */
-u16 pbuf[3] = {10, 50, 80};
+uint16_t pbuf[3] = {10, 50, 80};
 
-/*********************************************************************
- * @fn      TIM1_PWMOut_Init
+/**
+ * Initializes TIM1 PWM output.
  *
- * @brief   Initializes TIM1 PWM output.
- *
- * @param   arr - the period value.
- *          psc - the prescaler value.
- *          ccp - the pulse value.
- *
- * @return  none
+ * @param arr the period value.
+ * @param psc the prescaler value.
+ * @param ccp the pulse value.
  */
-void TIM1_PWMOut_Init(u16 arr, u16 psc, u16 ccp)
-{
+void TIM1_PWMOut_Init(uint16_t arr, uint16_t psc, uint16_t ccp) {
     GPIO_InitTypeDef        GPIO_InitStructure = {0};
     TIM_OCInitTypeDef       TIM_OCInitStructure = {0};
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
@@ -67,26 +57,22 @@ void TIM1_PWMOut_Init(u16 arr, u16 psc, u16 ccp)
     TIM_ARRPreloadConfig(TIM1, ENABLE);
 }
 
-/*********************************************************************
- * @fn      TIM1_DMA_Init
+/**
+ * Initializes the TIM DMAy Channelx configuration.
  *
- * @brief   Initializes the TIM DMAy Channelx configuration.
- *
- * @param   DMA_CHx -
- *            x can be 1 to 7.
- *          ppadr - Peripheral base address.
- *          memadr - Memory base address.
- *          bufsize - DMA channel buffer size.
- *
- * @return  none
+ * @param channel DMA channel among the DMA_CHx macros where x can be 
+ * 1 to 7.
+ * @param ppadr Peripheral base address.
+ * @param memadr Memory base address.
+ * @param bufsize DMA channel buffer size.
  */
-void TIM1_DMA_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufsize)
+void TIM1_DMA_Init(DMA_Channel_TypeDef *channel, u32 ppadr, u32 memadr, u16 bufsize)
 {
-    DMA_InitTypeDef DMA_InitStructure = {0};
+    DMA_InitTypeDef DMA_InitStructure = { 0 };
 
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 
-    DMA_DeInit(DMA_CHx);
+    DMA_DeInit(channel);
     DMA_InitStructure.DMA_PeripheralBaseAddr = ppadr;
     DMA_InitStructure.DMA_MemoryBaseAddr = memadr;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
@@ -98,29 +84,21 @@ void TIM1_DMA_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u32 memadr, u16 bufs
     DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
     DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
     DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-    DMA_Init(DMA_CHx, &DMA_InitStructure);
+    DMA_Init(channel, &DMA_InitStructure);
 
-    DMA_Cmd(DMA_CHx, ENABLE);
+    DMA_Cmd(channel, ENABLE);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
+int main(void) {
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     TIM1_PWMOut_Init(100, 48000 - 1, pbuf[0]);
-    TIM1_DMA_Init(DMA1_Channel5, (u32)TIM1_CH1CVR_ADDRESS, (u32)pbuf, 3);
+    TIM1_DMA_Init(DMA1_Channel5, (uint32_t)TIM1_CH1CVR_ADDRESS, (uint32_t)pbuf, 3);
 
     TIM_DMACmd(TIM1, TIM_DMA_Update, ENABLE);
     TIM_Cmd(TIM1, ENABLE);
     TIM_CtrlPWMOutputs(TIM1, ENABLE);
 
-    while(1);
+    while(1) { } // FIXME: outro
 }

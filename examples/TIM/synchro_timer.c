@@ -1,34 +1,34 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
-/*
- *@Note
-Timer synchronization mode:
- TIM1_CH1(PD2)
- This example demonstrates 4 timer synchronization modes.
-
-*/
-
-#include "debug.h"
-
-/*********************************************************************
- * @fn      TIM_TimSynchroMode1_Init
+/**
+ * Timer synchronization mode:
+ *  TIM1_CH1(PD2)
  *
- * @brief   Using TIM2 as prescaler for TIM1.
- *
- * @return  none
+ * This example demonstrates 4 timer synchronization modes.
  */
-void TIM_TimSynchroMode1_Init(void)
-{
+
+#include <ch32v00x/debug.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/tim.h>
+
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+#ifndef MODE
+# warning You can select a TIM mode betweeen 1-4. Defaulting to 1.
+# define MODE 1
+#elif !(1 <= MODE && MODE <= 4)
+# error MODE can be between 1 and 4.
+#endif
+
+#define __TIM_SynchroMode(N) TIM_TimSynchroMode##N##_Init
+#define _TIM_SynchroMode(N)  __TIM_SynchroMode(N)
+#define TIM_SynchroMode _TIM_SynchroMode(MODE)
+
+/**
+ * Using TIM2 as prescaler for TIM1.
+ */
+void TIM_TimSynchroMode1_Init(void) {
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
@@ -44,15 +44,10 @@ void TIM_TimSynchroMode1_Init(void)
     TIM_Cmd(TIM2, ENABLE);
 }
 
-/*********************************************************************
- * @fn      TIM_TimSynchroMode2_Init
- *
- * @brief   Using TIM2 to use TIM1.
- *
- * @return  none
+/**
+ * Using TIM2 to use TIM1.
  */
-void TIM_TimSynchroMode2_Init(void)
-{
+void TIM_TimSynchroMode2_Init(void) {
     TIM_OCInitTypeDef TIM_OCInitStructure = {0};
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
@@ -77,15 +72,10 @@ void TIM_TimSynchroMode2_Init(void)
     TIM_Cmd(TIM1, ENABLE);
 }
 
-/*********************************************************************
- * @fn      TIM_TimSynchroMode3_Init
- *
- * @brief   Using TIM2 to start TIM1.
- *
- * @return  none
+/**
+ * Using TIM2 to start TIM1.
  */
-void TIM_TimSynchroMode3_Init(void)
-{
+void TIM_TimSynchroMode3_Init(void) {
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
@@ -99,15 +89,10 @@ void TIM_TimSynchroMode3_Init(void)
     TIM_Cmd(TIM1, ENABLE);
 }
 
-/*********************************************************************
- * @fn      TIM_TimSynchroMode4_Init
- *
- * @brief   Starting TIM1 and TIM2 synchronously in response to an external trigger.
- *
- * @return  none
+/**
+ * Starting TIM1 and TIM2 synchronously in response to an external trigger.
  */
-void TIM_TimSynchroMode4_Init(void)
-{
+void TIM_TimSynchroMode4_Init(void) {
     GPIO_InitTypeDef  GPIO_InitStructure = {0};
     TIM_ICInitTypeDef TIM_ICInitStructure = {0};
 
@@ -139,27 +124,15 @@ void TIM_TimSynchroMode4_Init(void)
     TIM_SelectSlaveMode(TIM2, TIM_SlaveMode_Trigger);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
+int main(void) {
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     /* Timer synchronization Mode Selection */
-    TIM_TimSynchroMode1_Init();
-    //  TIM_TimSynchroMode2_Init();
-    //  TIM_TimSynchroMode3_Init();
-    //  TIM_TimSynchroMode4_Init();
+    TIM_SynchroMode();
 
-    while(1)
-    {
-        printf("TIM1 cnt:%d\r\n", TIM1->CNT);
-        printf("TIM2 cnt:%d\r\n", TIM2->CNT);
+    while (1) {
+        printf("TIM1 cnt:%d\n", TIM1->CNT);
+        printf("TIM2 cnt:%d\n", TIM2->CNT);
     }
 }

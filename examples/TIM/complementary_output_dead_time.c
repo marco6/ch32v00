@@ -1,40 +1,29 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
-/*
- *@Note
- complementary output and deadband insertion mode routines:
- TIM1_CH1(PD2),TIM1_CH1N(PD0)
- This example demonstrates three complementary output modes with dead zone of TIM1: complementary
- output with dead zone insertion, dead zone waveform delay Greater than the negative pulse, the dead
-  zone waveform delay is greater than the positive pulse.
-
+/**
+ * Complementary output and deadband insertion mode routines:
+ *  TIM1_CH1(PD2), TIM1_CH1N(PD0)
+ * This example demonstrates three complementary output modes with dead 
+ * zone of TIM1: complementary output with dead zone insertion, dead zone
+ * waveform delay Greater than the negative pulse, the dead zone waveform 
+ * delay is greater than the positive pulse.
 */
 
-#include "debug.h"
+#include <ch32v00x/debug.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/tim.h>
 
-/*********************************************************************
- * @fn      TIM1_Dead_Time_Init
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+/**
+ * Initializes TIM1 complementary output and dead time.
  *
- * @brief   Initializes TIM1 complementary output and dead time.
- *
- * @param   arr - the period value.
- *          psc - the prescaler value.
- *          ccp - the pulse value.
- *
- * @return  none
+ * @param arr the period value.
+ * @param psc the prescaler value.
+ * @param ccp the pulse value.
  */
-void TIM1_Dead_Time_Init(u16 arr, u16 psc, u16 ccp)
-{
+void TIM1_Dead_Time_Init(uint16_t arr, uint16_t psc, uint16_t ccp) {
     GPIO_InitTypeDef        GPIO_InitStructure = {0};
     TIM_OCInitTypeDef       TIM_OCInitStructure = {0};
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
@@ -85,17 +74,9 @@ void TIM1_Dead_Time_Init(u16 arr, u16 psc, u16 ccp)
     TIM_Cmd(TIM1, ENABLE);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
+int main(void) {
     USART_Printf_Init(115200);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     /* Complementary output with dead-time insertion */
     TIM1_Dead_Time_Init(100, 48 - 1, 50);
@@ -104,5 +85,5 @@ int main(void)
     /* Dead-time waveforms with delay greater than the positive pulse. */
     //  TIM1_Dead_Time_Init( 100, 48-1, 90 );
 
-    while(1);
+    while (1) { } // FIXME outro
 }
