@@ -13,20 +13,25 @@ function print_help() {
     echo "                               the name of the compilation output."
     echo "  -h, --help                   Display this help and exit."
     echo ""
-    echo "The 'PREFIX' environment variable can be used to specify a different compiler"
-    echo "chain prefix. The default id 'ch32v00x.' ."
+    echo "Few environmental values can be used to influence how the compiler is executed."
+    echo ""
+    echo "    PREFIX  can be used to specify a different compiler chain prefix."
+    echo "            The default is 'ch32v00x.' ."
+    echo "    CFLAGS  can be used to specify additional compilation flags to the compiler."
     echo ""
     echo "All examples here come with the following copyright notice, which have been"
     echo "stripped from the original source:"
     echo ""
     echo "    Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd."
+    echo "    "
     echo "    Attention: This software (modified or not) and binary are used for "
     echo "    microcontroller manufactured by Nanjing Qinheng Microelectronics."
     echo ""
     echo "Most of them have been modified by Marco Manino to take into account the "
     echo "structural changes applied to the original SDK to make it usable within"
-    echo "this snap. Please note that the SDK will evolve indipendentlt from and in"
+    echo "this snap. Please note that the SDK will evolve indipendently from and in"
     echo "a probably different direction than the original one."
+    echo ""
     exit 0
 }
 
@@ -58,7 +63,7 @@ then
     if [ "$compile" = "yes" ]
     then
         echo Compiling example $name...
-        flags="-Os -Wall -pedantic -flto --specs=ch32v00x.specs"
+        flags="$CFLAGS -Os -Wall -pedantic -flto --specs=ch32v00x.specs"
 
         if [ -z "$output" ]
         then

@@ -1,72 +1,67 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
 /*
- *@Note
- PEC error check, master/slave mode transceiver routine:
- I2C1_SCL(PC2)��I2C1_SDA(PC1)��
-  This example demonstrates that the Master sends with PEC error checking,
-  and the Slave receives. If a transmission error occurs, an error interrupt is triggered.
-  Note: The two boards download the Master and Slave programs respectively, and power
-  on at the same time.
-      Hardware connection:PC2 -- PC2
-                          PC1 -- PC1
+ * PEC error check, master/slave mode transceiver routine:
+ * I2C1_SCL(PC2)��I2C1_SDA(PC1)��
+ * 
+ * This example demonstrates that the Master sends with PEC error checking,
+ * and the Slave receives. If a transmission error occurs, an error interrupt is triggered.
+ * 
+ * Note: The two boards download the Master and Slave programs respectively, and power
+ * on at the same time.
+ * 
+ * Hardware connection:
+ *  PC2 -- PC2
+ *  PC1 -- PC1
+ */
 
-*/
+#include <ch32v00x/debug.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/i2c.h>
+#include <ch32v00x/misc.h>
+#include <ch32v00x/rcc.h>
 
-#include "debug.h"
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
 
 /* I2C Mode Definition */
-#define HOST_MODE     0
-#define SLAVE_MODE    1
+#define I2C_HOST_MODE 0
+#define I2C_SLAVE_MODE 1
 
 /* I2C Communication Mode Selection */
-#define I2C_MODE   HOST_MODE
-//#define I2C_MODE      SLAVE_MODE
+#if defined(HOST_MODE)
+# define I2C_MODE   I2C_HOST_MODE
+#elif defined(SLAVE_MODE)
+# define I2C_MODE   I2C_SLAVE_MODE
+#else
+# error Please define either HOST_MODE or SLAVE_MODE macros to select the behavior.
+#endif 
 
-/* Global define */
 #define Size          7
 #define RXAdderss     0x02
 #define TxAdderss     0x02
 
-/* Global Variable */
-u8 TxData[Size] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
-u8 RxData[Size];
+uint8_t TxData[Size] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };
+uint8_t RxData[Size];
 
-/*********************************************************************
- * @fn      IIC_Init
- *
- * @brief   Initializes the IIC peripheral.
- *
- * @return  none
+/**
+ * Initializes the IIC peripheral.
  */
-void IIC_Init(u32 bound, u16 address)
-{
+void IIC_Init(uint32_t bound, uint16_t address) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
     I2C_InitTypeDef  I2C_InitTSturcture = {0};
-    NVIC_InitTypeDef NVIC_InitStructure = {0};
 
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE );
-    RCC_APB1PeriphClockCmd( RCC_APB1Periph_I2C1, ENABLE );
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init( GPIOC, &GPIO_InitStructure );
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init( GPIOC, &GPIO_InitStructure );
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
 
     I2C_InitTSturcture.I2C_ClockSpeed = bound;
     I2C_InitTSturcture.I2C_Mode = I2C_Mode_I2C;
@@ -76,7 +71,8 @@ void IIC_Init(u32 bound, u16 address)
     I2C_InitTSturcture.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
     I2C_Init(I2C1, &I2C_InitTSturcture);
 
-#if(I2C_MODE == SLAVE_MODE)
+#if (I2C_MODE == I2C_SLAVE_MODE)
+    NVIC_InitTypeDef NVIC_InitStructure = {0};
     NVIC_InitStructure.NVIC_IRQChannel = I2C1_ER_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
@@ -84,137 +80,105 @@ void IIC_Init(u32 bound, u16 address)
     NVIC_Init(&NVIC_InitStructure);
 
     I2C_ITConfig(I2C1, I2C_IT_ERR, ENABLE);
-
 #endif
 
     I2C_Cmd(I2C1, ENABLE);
     I2C_CalculatePEC(I2C1, ENABLE);
 
-#if(I2C_MODE == HOST_MODE)
+#if (I2C_MODE == I2C_HOST_MODE)
     I2C_AcknowledgeConfig(I2C1, ENABLE);
-
 #endif
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
-    u8 i = 0;
-    u8 pecValue;
+int main(void) {
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
     Delay_Init();
     USART_Printf_Init(460800);
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
-#if(I2C_MODE == HOST_MODE)
-    printf("IIC Host mode\r\n");
+#if (I2C_MODE == I2C_HOST_MODE)
+    printf("IIC Host mode\n");
     IIC_Init(80000, TxAdderss);
 
-    while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY) != RESET);
+    while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY) != RESET) { }
     I2C_GenerateSTART(I2C1, ENABLE);
 
-    while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)) { }
     I2C_Send7bitAddress(I2C1, 0x02, I2C_Direction_Transmitter);
 
-    while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) { }
 
-    while(i < 7)
-    {
-        if(i < 6)
-        {
-            if(I2C_GetFlagStatus(I2C1, I2C_FLAG_TXE) != RESET)
-            {
+    uint8_t i = 0;
+    while (i < 7) {
+        if (i < 6) {
+            if (I2C_GetFlagStatus(I2C1, I2C_FLAG_TXE) != RESET) {
                 I2C_SendData(I2C1, TxData[i]);
                 i++;
             }
         }
 
-        if(i == 6)
-        {
-            if(I2C_GetFlagStatus(I2C1, I2C_FLAG_TXE) != RESET)
-            {
+        if (i == 6) {
+            if(I2C_GetFlagStatus(I2C1, I2C_FLAG_TXE) != RESET) {
                 I2C_TransmitPEC(I2C1, ENABLE);
                 i++;
             }
         }
     }
 
-    while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) { }
     I2C_GenerateSTOP(I2C1, ENABLE);
 
-#elif(I2C_MODE == SLAVE_MODE)
-    printf("IIC Slave mode\r\n");
+#elif (I2C_MODE == I2C_SLAVE_MODE)
+    uint8_t pecValue;
+
+    printf("IIC Slave mode\n");
     IIC_Init(80000, RXAdderss);
 
-    while(!I2C_CheckEvent(I2C1, I2C_EVENT_SLAVE_RECEIVER_ADDRESS_MATCHED));
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_SLAVE_RECEIVER_ADDRESS_MATCHED)) { }
 
-    while(i < 7)
-    {
-        if(i < 5)
-        {
-            if(I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) != RESET)
-            {
+    uint8_t i = 0;
+    while (i < 7) {
+        if (i < 5) {
+            if (I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) != RESET) {
                 RxData[i] = I2C_ReceiveData(I2C1);
                 i++;
             }
         }
 
-        if(i == 5)
-        {
+        if(i == 5) {
             pecValue = I2C_GetPEC(I2C1);
-            if(I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) != RESET)
-            {
+            if (I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) != RESET) {
                 RxData[i] = I2C_ReceiveData(I2C1);
                 i++;
             }
         }
 
-        if(i == 6)
-        {
+        if (i == 6) {
             I2C_TransmitPEC(I2C1, ENABLE);
-            if(I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) != RESET)
-            {
+            if (I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) != RESET) {
                 RxData[i] = I2C_ReceiveData(I2C1);
                 i++;
             }
         }
     }
 
-    printf("pecValue:%02x\r\n", pecValue);
-    printf("RxData:\r\n");
+    printf("pecValue:%02x\n", pecValue);
+    printf("RxData:\n");
 
-    for(i = 0; i < 7; i++)
-    {
-        printf("%02x\r\n", RxData[i]);
+    for (i = 0; i < 7; i++) {
+        printf("%02x\n", RxData[i]);
     }
 
 #endif
 
-    while(1);
+    while(1) { } // FIXME outro
 }
 
 void I2C1_ER_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-
-/*********************************************************************
- * @fn      I2C1_ER_IRQHandler
- *
- * @brief   This function IIC PEC error exception.
- *
- * @return  none
- */
-void I2C1_ER_IRQHandler(void )
-{
-    if( I2C_GetITStatus( I2C1, I2C_IT_PECERR ) != RESET )
-    {
-        printf( "PECEER\r\n" );
-        I2C_ClearITPendingBit( I2C1, I2C_IT_PECERR );
+void I2C1_ER_IRQHandler(void) {
+    if (I2C_GetITStatus(I2C1, I2C_IT_PECERR) != RESET) {
+        printf("PECEER\n");
+        I2C_ClearITPendingBit(I2C1, I2C_IT_PECERR);
     }
 }
-
