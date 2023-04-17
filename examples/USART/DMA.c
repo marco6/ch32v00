@@ -1,59 +1,38 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
-/*
- *@Note
- USART DMA, master/slave mode transceiver routine:
- USART1_Tx(PD5)\USART1_Rx(PD6).
-
- This routine demonstrates that two boards use DMA to send and receive.
- After successful sending and receiving, PD0 is connected to LED,
- and the LED light flashes.
-
-   Hardware connection:PD5 -- PD6
-                       PD6 -- PD5
-                       PDO -- LED
-
-*/
-
-#include "debug.h"
-
-/* Global typedef */
-typedef enum
-{
-    FAILED = 0,
-    PASSED = !FAILED
-} TestStatus;
-
-/* Global define */
-#define TxSize1    (size(TxBuffer1))
-#define size(a)    (sizeof(a) / sizeof(*(a)))
-
-/* Global Variable */
-u8 TxBuffer1[] = "*Buffer1 Send from USART1 using DMA!";
-u8 RxBuffer1[TxSize1] = {0};
-u8 TxCnt1 = 0, RxCnt1 = 0;
-u8 Rxfinish1 = 0;
-TestStatus TransferStatus1 = FAILED;
-
-/*********************************************************************
- * @fn      GPIO_Toggle_INIT
+/**
+ * USART DMA, master/slave mode transceiver routine:
+ * USART1_Tx(PD5)\USART1_Rx(PD6).
  *
- * @brief   Initializes GPIOA.0
+ * This routine demonstrates that two boards use DMA to send and receive.
+ * After successful sending and receiving, PD0 is connected to LED,
+ * and the LED light flashes.
  *
- * @return  none
+ * Hardware connection:
+ *  PD5 -- PD6
+ *  PD6 -- PD5
+ *  PDO -- LED
  */
-void GPIO_Toggle_INIT(void)
-{
+
+#include <ch32v00x/debug.h>
+#include <ch32v00x/dma.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/misc.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
+
+#include <string.h>
+
+#define size(a)    (sizeof(a) / sizeof(*(a)))
+#define TxSize1    (size(TxBuffer1))
+
+uint8_t TxBuffer1[] = "*Buffer1 Send from USART1 using DMA!";
+uint8_t RxBuffer1[TxSize1] = {0};
+uint8_t TxCnt1 = 0, RxCnt1 = 0;
+uint8_t Rxfinish1 = 0;
+
+/**
+ * Initializes GPIOA.0
+ */
+void GPIO_Toggle_INIT(void) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
@@ -64,40 +43,10 @@ void GPIO_Toggle_INIT(void)
     GPIO_SetBits(GPIOD, GPIO_Pin_0);
 }
 
-/*********************************************************************
- * @fn      Buffercmp
- *
- * @brief   Compares two buffers
- *
- * @param   Buf1,Buf2 - buffers to be compared
- *          BufferLength - buffer's length
- *
- * @return  PASSED - Buf1 identical to Buf
- *          FAILED - Buf1 differs from Buf2
+/**
+ * Initializes the USART1peripheral.
  */
-TestStatus Buffercmp(uint8_t *Buf1, uint8_t *Buf2, uint16_t BufLength)
-{
-    while(BufLength--)
-    {
-        if(*Buf1 != *Buf2)
-        {
-            return FAILED;
-        }
-        Buf1++;
-        Buf2++;
-    }
-    return PASSED;
-}
-
-/*********************************************************************
- * @fn      USARTx_CFG
- *
- * @brief   Initializes the USART1peripheral.
- *
- * @return  none
- */
-void USARTx_CFG(void)
-{
+void USARTx_CFG(void) {
     GPIO_InitTypeDef  GPIO_InitStructure = {0};
     USART_InitTypeDef USART_InitStructure = {0};
 
@@ -127,21 +76,19 @@ void USARTx_CFG(void)
     USART_Cmd(USART1, ENABLE);
 }
 
-/*********************************************************************
- * @fn      DMA_INIT
+/**
+ * Configures the DMA for USART1.
  *
- * @brief   Configures the DMA for USART1.
- *
- * @return  none
+ * FIXME this is called just like `DMA_Init` - that's why they 
+ * couldn't call it DMA_Init and they had to break the convention...
  */
-void DMA_INIT(void)
-{
+void DMA_INIT(void) {
     DMA_InitTypeDef DMA_InitStructure = {0};
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 
     DMA_DeInit(DMA1_Channel4);
-    DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)(&USART1->DATAR);
-    DMA_InitStructure.DMA_MemoryBaseAddr = (u32)TxBuffer1;
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART1->DATAR);
+    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)TxBuffer1;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
     DMA_InitStructure.DMA_BufferSize = TxSize1;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -154,24 +101,14 @@ void DMA_INIT(void)
     DMA_Init(DMA1_Channel4, &DMA_InitStructure);
 
     DMA_DeInit(DMA1_Channel5);
-    DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)(&USART1->DATAR);
-    DMA_InitStructure.DMA_MemoryBaseAddr = (u32)RxBuffer1;
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)(&USART1->DATAR);
+    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)RxBuffer1;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
     DMA_InitStructure.DMA_BufferSize = TxSize1;
     DMA_Init(DMA1_Channel5, &DMA_InitStructure);
 }
 
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
- */
-int main(void)
-{
-    u8 i=0;
-
+int main(void) {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     Delay_Init();
     GPIO_Toggle_INIT();
@@ -180,27 +117,19 @@ int main(void)
     USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
     Delay_Ms(1000);
     USART_DMACmd(USART1, USART_DMAReq_Tx, ENABLE);
-    while(DMA_GetFlagStatus(DMA1_FLAG_TC4) == RESET) /* Wait until USART1 TX DMA1 Transfer Complete */
-    {
-    }
-    while(DMA_GetFlagStatus(DMA1_FLAG_TC5) == RESET) /* Wait until USART1 RX DMA1 Transfer Complete */
-    {
-    }
-    TransferStatus1 = Buffercmp(TxBuffer1, RxBuffer1, TxSize1);
+    // Wait until USART1 TX DMA1 Transfer Complete
+    while(DMA_GetFlagStatus(DMA1_FLAG_TC4) == RESET) { }
+    // Wait until USART1 RX DMA1 Transfer Complete
+    while(DMA_GetFlagStatus(DMA1_FLAG_TC5) == RESET) { }
 
-    if(TransferStatus1)
-    {
-        while(1){
+    int diff = memcmp(TxBuffer1, RxBuffer1, TxSize1);
+    if (!diff) {
+        for (uint8_t i = Bit_SET; ; i = (i == Bit_SET) ? Bit_RESET : Bit_SET) {
+            GPIO_WriteBit(GPIOD, GPIO_Pin_0, i);
             Delay_Ms(250);
-            GPIO_WriteBit(GPIOD, GPIO_Pin_0, (i == 0) ? (i = Bit_SET) : (i = Bit_RESET));
         }
-    }
-    else
-    {
+    } else {
         GPIO_ResetBits(GPIOD, GPIO_Pin_0);
-    }
-
-    while(1)
-    {
+        while(1) { } // FIXME outro
     }
 }
