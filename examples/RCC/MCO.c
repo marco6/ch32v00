@@ -1,40 +1,25 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : main.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main program body.
-*********************************************************************************
-* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-* Attention: This software (modified or not) and binary are used for 
-* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-*******************************************************************************/
-
-/*
- *@Note
- MCO pin clock output routine:
- MCO(PC4)
- This example demonstrates the MCO(PC4) pin output clock
-
-*/
-
-#include "debug.h"
-
-/*********************************************************************
- * @fn      main
- *
- * @brief   Main program.
- *
- * @return  none
+/**
+ * MCO pin clock output routine:
+ * MCO(PC4)
+ * This example demonstrates the MCO(PC4) pin output clock
  */
-int main(void)
-{
+
+#include <ch32v00x/debug.h>
+#include <ch32v00x/gpio.h>
+#include <ch32v00x/misc.h>
+#include <ch32v00x/rcc.h>
+
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+int main(void) {
     GPIO_InitTypeDef  GPIO_InitStructure={0};
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
     USART_Printf_Init(115200);
     SystemCoreClockUpdate();
-    printf("SystemClk:%d\r\n",SystemCoreClock);
+    printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
 
@@ -44,10 +29,10 @@ int main(void)
     GPIO_Init(GPIOC, &GPIO_InitStructure);
 
     /* MCO Output GPIOC 4 */
-    RCC_MCOConfig( RCC_MCO_SYSCLK );
+    RCC_MCOConfig(RCC_MCO_SYSCLK);
 //    RCC_MCOConfig( RCC_MCO_HSI );
 //    RCC_MCOConfig( RCC_MCO_HSE );
 //    RCC_MCOConfig( RCC_MCO_PLLCLK );
 
-    while(1);
+    while(1) { } // FIXME: outro
 }
