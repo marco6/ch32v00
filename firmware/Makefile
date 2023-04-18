@@ -4,27 +4,26 @@ OPT = -Os -flto -ffat-lto-objects
 BUILD_DIR = build
 
 # WHY NOT? src/ch32v00x_core.c
-#src/ch32v00x_debug.c \
 
 C_SOURCES = \
-src/ch32v00x_adc.c \
-src/ch32v00x_dbgmcu.c \
-src/ch32v00x_dma.c \
-src/ch32v00x_exti.c \
-src/ch32v00x_flash.c \
-src/ch32v00x_gpio.c \
-src/ch32v00x_i2c.c \
-src/ch32v00x_it.c \
-src/ch32v00x_iwdg.c \
-src/ch32v00x_nvic.c \
-src/ch32v00x_opa.c \
-src/ch32v00x_pwr.c \
-src/ch32v00x_rcc.c \
-src/ch32v00x_spi.c \
-src/ch32v00x_system.c \
-src/ch32v00x_tim.c \
-src/ch32v00x_usart.c \
-src/ch32v00x_wwdg.c \
+src/adc.c \
+src/dbgmcu.c \
+src/dma.c \
+src/exti.c \
+src/flash.c \
+src/gpio.c \
+src/i2c.c \
+src/it.c \
+src/iwdg.c \
+src/nvic.c \
+src/opa.c \
+src/pwr.c \
+src/rcc.c \
+src/spi.c \
+src/system.c \
+src/tim.c \
+src/usart.c \
+src/wwdg.c \
 
 
 # ASM sources
