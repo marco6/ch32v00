@@ -49,16 +49,16 @@ typedef int32_t  s32;
 typedef int16_t s16;
 typedef int8_t  s8;
 
-typedef enum {NoREADY = 0, READY = !NoREADY} ErrorStatus;
+typedef enum { NoREADY = 0, READY = !NoREADY } ErrorStatus;
 
-typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
+typedef enum { DISABLE = 0, ENABLE = !DISABLE } FunctionalState;
 
-typedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus;
+typedef enum { RESET = 0, SET = !RESET } FlagStatus, ITStatus;
 
 #define   RV_STATIC_INLINE  static  inline
 
 /* memory mapped structure for Program Fast Interrupt Controller (PFIC) */
-typedef struct{
+typedef struct {
     __I  uint32_t ISR[8];
     __I  uint32_t IPR[8];
     __IO uint32_t ITHRESDR;
@@ -82,19 +82,17 @@ typedef struct{
     __IO uint8_t IPRIOR[256];
     uint8_t RESERVED7[0x810];
     __IO uint32_t SCTLR;
-}PFIC_Type;
+} PFIC_Type;
 
 /* memory mapped structure for SysTick */
-typedef struct
-{
+typedef struct {
     __IO uint32_t CTLR;
     __IO uint32_t SR;
     __IO uint32_t CNT;
     uint32_t RESERVED0;
     __IO uint32_t CMP;
     uint32_t RESERVED1;
-}SysTick_Type;
-
+} SysTick_Type;
 
 #define PFIC            ((PFIC_Type *) 0xE000E000 )
 #define NVIC            PFIC
@@ -150,124 +148,6 @@ RV_STATIC_INLINE void __NOP()
 }
 
 /*********************************************************************
- * @fn       NVIC_EnableIRQ
- *
- * @brief   Disable Interrupt
- *
- * @param   IRQn - Interrupt Numbers
- *
- * @return  none
- */
-RV_STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
-{
-  NVIC->IENR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
-}
-
-/*********************************************************************
- * @fn       NVIC_DisableIRQ
- *
- * @brief   Disable Interrupt
- *
- * @param   IRQn - Interrupt Numbers
- *
- * @return  none
- */
-RV_STATIC_INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
-{
-  NVIC->IRER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
-}
-
-/*********************************************************************
- * @fn       NVIC_GetStatusIRQ
- *
- * @brief   Get Interrupt Enable State
- *
- * @param   IRQn - Interrupt Numbers
- *
- * @return  1 - 1: Interrupt Pending Enable
- *                0 - Interrupt Pending Disable
- */
-RV_STATIC_INLINE uint32_t NVIC_GetStatusIRQ(IRQn_Type IRQn)
-{
-  return((uint32_t) ((NVIC->ISR[(uint32_t)(IRQn) >> 5] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));
-}
-
-/*********************************************************************
- * @fn      NVIC_GetPendingIRQ
- *
- * @brief   Get Interrupt Pending State
- *
- * @param   IRQn - Interrupt Numbers
- *
- * @return  1 - 1: Interrupt Pending Enable
- *                0 - Interrupt Pending Disable
- */
-RV_STATIC_INLINE uint32_t NVIC_GetPendingIRQ(IRQn_Type IRQn)
-{
-  return((uint32_t) ((NVIC->IPR[(uint32_t)(IRQn) >> 5] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));
-}
-
-/*********************************************************************
- * @fn      NVIC_SetPendingIRQ
- *
- * @brief   Set Interrupt Pending
- *
- * @param   IRQn - Interrupt Numbers
- *
- * @return  none
- */
-RV_STATIC_INLINE void NVIC_SetPendingIRQ(IRQn_Type IRQn)
-{
-  NVIC->IPSR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
-}
-
-/*********************************************************************
- * @fn      NVIC_ClearPendingIRQ
- *
- * @brief   Clear Interrupt Pending
- *
- * @param   IRQn - Interrupt Numbers
- *
- * @return  none
- */
-RV_STATIC_INLINE void NVIC_ClearPendingIRQ(IRQn_Type IRQn)
-{
-  NVIC->IPRR[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
-}
-
-/*********************************************************************
- * @fn      NVIC_GetActive
- *
- * @brief   Get Interrupt Active State
- *
- * @param   IRQn - Interrupt Numbers
- *
- * @return  1 - Interrupt Active
- *                0 - Interrupt No Active
- */
-RV_STATIC_INLINE uint32_t NVIC_GetActive(IRQn_Type IRQn)
-{
-  return((uint32_t)((NVIC->IACTR[(uint32_t)(IRQn) >> 5] & (1 << ((uint32_t)(IRQn) & 0x1F)))?1:0));
-}
-
-/*********************************************************************
- * @fn      NVIC_SetPriority
- *
- * @brief   Set Interrupt Priority
- *
- * @param   IRQn - Interrupt Numbers
- *          priority: bit7 - pre-emption priority
- *                    bit6 - subpriority
- *                    bit[5-0] - reserved
- *
- * @return  none
- */
-RV_STATIC_INLINE void NVIC_SetPriority(IRQn_Type IRQn, uint8_t priority)
-{
-  NVIC->IPRIOR[(uint32_t)(IRQn)] = priority;
-}
-
-/*********************************************************************
  * @fn       __WFI
  *
  * @brief   Wait for Interrupt
@@ -296,44 +176,6 @@ __attribute__( ( always_inline ) ) RV_STATIC_INLINE void __WFE(void)
   NVIC->SCTLR = (NVIC->SCTLR & ~(1<<5)) | ( t & (1<<5));
   asm volatile ("wfi");
   asm volatile ("wfi");
-}
-
-/*********************************************************************
- * @fn      SetVTFIRQ
- *
- * @brief   Set VTF Interrupt
- *
- * @param   addr - VTF interrupt service function base address.
- *                  IRQn - Interrupt Numbers
- *                  num - VTF Interrupt Numbers
- *                  NewState -  DISABLE or ENABLE
- *
- * @return  none
- */
-RV_STATIC_INLINE void SetVTFIRQ(uint32_t addr, IRQn_Type IRQn, uint8_t num, FunctionalState NewState){
-  if(num > 1)  return ;
-
-  if (NewState != DISABLE)
-  {
-      NVIC->VTFIDR[num] = IRQn;
-      NVIC->VTFADDR[num] = ((addr&0xFFFFFFFE)|0x1);
-  }
-  else{
-      NVIC->VTFIDR[num] = IRQn;
-      NVIC->VTFADDR[num] = ((addr&0xFFFFFFFE)&(~0x1));
-  }
-}
-
-/*********************************************************************
- * @fn       NVIC_SystemReset
- *
- * @brief   Initiate a system reset request
- *
- * @return  none
- */
-RV_STATIC_INLINE void NVIC_SystemReset(void)
-{
-  NVIC->CFGR = NVIC_KEY3|(1<<7);
 }
 
 

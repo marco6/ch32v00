@@ -3,9 +3,8 @@
  * Transfer SRC_BUF[Buf_Size] to DST_BUF[Buf_Size] via DMA.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/dma.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
 
 #include <inttypes.h>

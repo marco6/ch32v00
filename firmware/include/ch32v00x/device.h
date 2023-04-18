@@ -6,7 +6,6 @@ extern "C" {
 #endif
 
 #include <ch32v00x/core.h>
-#include <ch32v00x/system.h>
 
 #include <stdint.h>
 
@@ -19,43 +18,6 @@ extern "C" {
 #define HSE_STARTUP_TIMEOUT       ((uint16_t)0x2000) /* Time out for HSE start up */
 
 #define HSI_VALUE                 ((uint32_t)24000000) /* Value of the Internal oscillator in Hz */
-
-
-/* Interrupt Number Definition, according to the selected device */
-typedef enum IRQn
-{
-    /******  RISC-V Processor Exceptions Numbers *******************************************************/
-    NonMaskableInt_IRQn = 2, /* 2 Non Maskable Interrupt                             */
-    EXC_IRQn = 3,            /* 3 Exception Interrupt                                */
-    SysTicK_IRQn = 12,       /* 12 System timer Interrupt                            */
-    Software_IRQn = 14,      /* 14 software Interrupt                                */
-
-    /******  RISC-V specific Interrupt Numbers *********************************************************/
-    WWDG_IRQn = 16,          /* Window WatchDog Interrupt                            */
-    PVD_IRQn = 17,           /* PVD through EXTI Line detection Interrupt            */
-    FLASH_IRQn = 18,         /* FLASH global Interrupt                               */
-    RCC_IRQn = 19,           /* RCC global Interrupt                                 */
-    EXTI7_0_IRQn = 20,       /* External Line[7:0] Interrupts                        */
-    AWU_IRQn = 21,           /* AWU global Interrupt                                 */
-    DMA1_Channel1_IRQn = 22, /* DMA1 Channel 1 global Interrupt                      */
-    DMA1_Channel2_IRQn = 23, /* DMA1 Channel 2 global Interrupt                      */
-    DMA1_Channel3_IRQn = 24, /* DMA1 Channel 3 global Interrupt                      */
-    DMA1_Channel4_IRQn = 25, /* DMA1 Channel 4 global Interrupt                      */
-    DMA1_Channel5_IRQn = 26, /* DMA1 Channel 5 global Interrupt                      */
-    DMA1_Channel6_IRQn = 27, /* DMA1 Channel 6 global Interrupt                      */
-    DMA1_Channel7_IRQn = 28, /* DMA1 Channel 7 global Interrupt                      */
-    ADC_IRQn = 29,           /* ADC global Interrupt                                 */
-    I2C1_EV_IRQn = 30,       /* I2C1 Event Interrupt                                 */
-    I2C1_ER_IRQn = 31,       /* I2C1 Error Interrupt                                 */
-    USART1_IRQn = 32,        /* USART1 global Interrupt                              */
-    SPI1_IRQn = 33,          /* SPI1 global Interrupt                                */
-    TIM1_BRK_IRQn = 34,      /* TIM1 Break Interrupt                                 */
-    TIM1_UP_IRQn = 35,       /* TIM1 Update Interrupt                                */
-    TIM1_TRG_COM_IRQn = 36,  /* TIM1 Trigger and Commutation Interrupt               */
-    TIM1_CC_IRQn = 37,       /* TIM1 Capture Compare Interrupt                       */
-    TIM2_IRQn = 38,          /* TIM2 global Interrupt                                */
-
-} IRQn_Type;
 
 #define HardFault_IRQn    EXC_IRQn
 

@@ -1,4 +1,4 @@
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 
 __IO uint32_t NVIC_Priority_Group = 0;
 

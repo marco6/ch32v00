@@ -4,10 +4,11 @@ OPT = -Os -flto -ffat-lto-objects
 BUILD_DIR = build
 
 # WHY NOT? src/ch32v00x_core.c
+#src/ch32v00x_debug.c \
+
 C_SOURCES = \
 src/ch32v00x_adc.c \
 src/ch32v00x_dbgmcu.c \
-src/ch32v00x_debug.c \
 src/ch32v00x_dma.c \
 src/ch32v00x_exti.c \
 src/ch32v00x_flash.c \
@@ -15,7 +16,7 @@ src/ch32v00x_gpio.c \
 src/ch32v00x_i2c.c \
 src/ch32v00x_it.c \
 src/ch32v00x_iwdg.c \
-src/ch32v00x_misc.c \
+src/ch32v00x_nvic.c \
 src/ch32v00x_opa.c \
 src/ch32v00x_pwr.c \
 src/ch32v00x_rcc.c \

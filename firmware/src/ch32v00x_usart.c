@@ -651,7 +651,7 @@ FlagStatus USART_GetFlagStatus(USART_TypeDef *USARTx, uint16_t USART_FLAG)
 {
     FlagStatus bitstatus = RESET;
 
-       if((USARTx->STATR & USART_FLAG) != (uint16_t)RESET)
+    if((USARTx->STATR & USART_FLAG) != (uint16_t)RESET)
     {
         bitstatus = SET;
     }
@@ -782,4 +782,36 @@ void USART_ClearITPendingBit(USART_TypeDef *USARTx, uint16_t USART_IT)
     bitpos = USART_IT >> 0x08;
     itmask = ((uint16_t)0x01 << (uint16_t)bitpos);
     USARTx->STATR = (uint16_t)~itmask;
+}
+
+/*********************************************************************
+ * @fn      USART_Printf_Init
+ *
+ * @brief   Initializes the USARTx peripheral.
+ *
+ * @param   baudrate - USART communication baud rate.
+ *
+ * @return  None
+ */
+void USART_Printf_Init(uint32_t baudrate) {
+    // FIXME: questa deve andare in realtà nella _write
+    // GPIO_InitTypeDef  GPIO_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD | RCC_APB2Periph_USART1, ENABLE);
+
+    // GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+    // GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    // GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    // GPIO_Init(GPIOD, &GPIO_InitStructure);
+
+    USART_InitStructure.USART_BaudRate = baudrate;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Tx;
+
+    USART_Init(USART1, &USART_InitStructure);
+    USART_Cmd(USART1, ENABLE);
 }

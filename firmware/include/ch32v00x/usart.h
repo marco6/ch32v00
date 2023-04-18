@@ -138,6 +138,7 @@ typedef struct
 #define USART_FLAG_FE                        ((uint16_t)0x0002)
 #define USART_FLAG_PE                        ((uint16_t)0x0001)
 
+void       USART_Printf_Init(uint32_t baudrate); // FIXME this should probably go away 
 void       USART_DeInit(USART_TypeDef *USARTx);
 void       USART_Init(USART_TypeDef *USARTx, USART_InitTypeDef *USART_InitStruct);
 void       USART_StructInit(USART_InitTypeDef *USART_InitStruct);

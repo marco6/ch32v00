@@ -1,3 +1,4 @@
+#include <ch32v00x/system.h>
 #include <ch32v00x/rcc.h>
 
 /* RCC registers bit address in the alias region */
@@ -700,8 +701,7 @@ void RCC_ClearFlag(void)
  *
  * @return  ITStatus - SET or RESET.
  */
-ITStatus RCC_GetITStatus(uint8_t RCC_IT)
-{
+ITStatus RCC_GetITStatus(uint8_t RCC_IT) {
     ITStatus bitstatus = RESET;
 
     if((RCC->INTR & RCC_IT) != (uint32_t)RESET)
@@ -716,24 +716,61 @@ ITStatus RCC_GetITStatus(uint8_t RCC_IT)
     return bitstatus;
 }
 
-/*********************************************************************
- * @fn      RCC_ClearITPendingBit
+/**
+ * Clears the RCC's interrupt pending bits.
  *
- * @brief   Clears the RCC's interrupt pending bits.
- *
- * @param   RCC_IT - specifies the interrupt pending bit to clear.
- *            RCC_IT_LSIRDY - LSI ready interrupt.
- *            RCC_IT_HSIRDY - HSI ready interrupt.
- *            RCC_IT_HSERDY - HSE ready interrupt.
- *            RCC_IT_PLLRDY - PLL ready interrupt.
- *            RCC_IT_CSS - Clock Security System interrupt.
- *
- * @return  none
+ * @param RCC_IT specifies the interrupt pending bit to clear. 
+ * Available values are:
+ *  - RCC_IT_LSIRDY: LSI ready interrupt.
+ *  - RCC_IT_HSIRDY: HSI ready interrupt.
+ *  - RCC_IT_HSERDY: HSE ready interrupt.
+ *  - RCC_IT_PLLRDY: PLL ready interrupt.
+ *  - RCC_IT_CSS: Clock Security System interrupt.
  */
-void RCC_ClearITPendingBit(uint8_t RCC_IT)
-{
+void RCC_ClearITPendingBit(uint8_t RCC_IT) {
     *(__IO uint8_t *)INTR_BYTE3_ADDRESS = RCC_IT;
 }
 
+typedef struct {
+    uint16_t period_ms;
+    uint8_t period_us;
+} clock_info_t;
 
+static clock_info_t SysclkInfo() {
+    clock_info_t info;
+    info.period_us = SystemCoreClock / 8000000;
+    info.period_ms = (uint16_t)info.period_us * 1000;
+
+    return info;
+}
+
+void Delay_Us(uint32_t n) {
+    const clock_info_t info = SysclkInfo();
+    uint32_t i;
+
+    SysTick->SR &= ~(1 << 0);
+    i = (uint32_t)n * info.period_us;
+
+    SysTick->CMP = i;
+    SysTick->CNT = 0;
+    SysTick->CTLR |=(1 << 0);
+
+    while((SysTick->SR & (1 << 0)) != (1 << 0)) { }
+    SysTick->CTLR &= ~(1 << 0);
+}
+
+void Delay_Ms(uint32_t n) {
+    const clock_info_t info = SysclkInfo();
+    uint32_t i;
+
+    SysTick->SR &= ~(1 << 0);
+    i = (uint32_t)n * info.period_ms;
+
+    SysTick->CMP = i;
+    SysTick->CNT = 0;
+    SysTick->CTLR |=(1 << 0);
+
+    while((SysTick->SR & (1 << 0)) != (1 << 0)) { }
+    SysTick->CTLR &= ~(1 << 0);
+}
 

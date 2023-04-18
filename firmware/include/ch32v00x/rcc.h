@@ -110,6 +110,8 @@ typedef struct
 #define SysTick_CLKSource_HCLK_Div8      ((uint32_t)0xFFFFFFFB)
 #define SysTick_CLKSource_HCLK           ((uint32_t)0x00000004)
 
+extern uint32_t SystemCoreClock;          /* System Clock Frequency (Core Clock) */
+
 void        RCC_DeInit(void);
 void        RCC_HSEConfig(uint32_t RCC_HSE);
 ErrorStatus RCC_WaitForHSEStartUp(void);
@@ -135,6 +137,20 @@ FlagStatus  RCC_GetFlagStatus(uint8_t RCC_FLAG);
 void        RCC_ClearFlag(void);
 ITStatus    RCC_GetITStatus(uint8_t RCC_IT);
 void        RCC_ClearITPendingBit(uint8_t RCC_IT);
+
+/**
+ * Wait synchronously for n microseconds.
+ *
+ * @param n microseconds.
+ */
+void Delay_Us(uint32_t n);
+
+/**
+ * Wait synchronously for n milliseconds.
+ *
+ * @param n milliseconds.
+ */
+void Delay_Ms(uint32_t n);
 
 #ifdef __cplusplus
 }
