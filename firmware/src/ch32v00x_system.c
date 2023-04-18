@@ -1,12 +1,3 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : system_ch32v00x.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : CH32V00x Device Peripheral Access Layer System Source File.
- * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
- *********************************************************************************/
 #include <ch32v00x/device.h>
 
 /* 

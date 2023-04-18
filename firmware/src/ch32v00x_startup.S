@@ -1,15 +1,3 @@
-;/********************************** (C) COPYRIGHT *******************************
-;* File Name          : startup_ch32v00x.s
-;* Author             : WCH
-;* Version            : V1.0.0
-;* Date               : 2022/08/08
-;* Description        : vector table for eclipse toolchain.
-;*********************************************************************************
-;* Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
-;* Attention: This software (modified or not) and binary are used for 
-;* microcontroller manufactured by Nanjing Qinheng Microelectronics.
-;*******************************************************************************/
-
 	.section  .init, "ax", @progbits
 	.globl  _start
 	.align  2

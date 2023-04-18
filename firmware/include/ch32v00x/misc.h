@@ -1,15 +1,3 @@
-/********************************** (C) COPYRIGHT  *******************************
- * File Name          : ch32v00x_misc.h
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : This file contains all the functions prototypes for the 
- *                      miscellaneous firmware library functions.
- *********************************************************************************
- * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * Attention: This software (modified or not) and binary are used for 
- * microcontroller manufactured by Nanjing Qinheng Microelectronics.
- *******************************************************************************/   
 #ifndef __CH32V00X_MISC_H
 #define __CH32V00X_MISC_H
 

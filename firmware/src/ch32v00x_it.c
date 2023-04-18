@@ -1,12 +1,3 @@
-/********************************** (C) COPYRIGHT *******************************
- * File Name          : ch32v00x_it.c
- * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2022/08/08
- * Description        : Main Interrupt Service Routines.
- * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
- *******************************************************************************/
 // #include <ch32v00x/it.h>
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast"), weak));
