@@ -31,8 +31,22 @@
   uint32_t SystemCoreClock         = HSI_VALUE;
 #endif
 
-__I uint8_t AHBPrescTable[16] = {1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8};
+/**
+ * This code mimics the access to the table
+ * of prescaler values. The table was so 
+ * simple that this operation is both faster
+ * and consumes less memory.
+ */
+static uint8_t AHBPrescTable(uint8_t i) {
+    // The original table was defined as:
+    //
+    //   uint8_t AHBPrescTable[16] = {
+    //       1, 2, 3, 4, 5, 6, 7, 8,
+    //       1, 2, 3, 4, 5, 6, 7, 8
+    //   };
 
+    return (i&0x7) + 1;
+}
 
 /* system_private_function_proto_types */
 static void SetSysClock(void);
@@ -73,51 +87,39 @@ void SystemInit (void)
 }
 
 
-/*********************************************************************
- * @fn      SystemCoreClockUpdate
- *
- * @brief   Update SystemCoreClock variable according to Clock Register Values.
- *
- * @return  none
+/**
+ * Update SystemCoreClock variable according to Clock Register Values.
  */
-void SystemCoreClockUpdate (void)
-{
+void SystemCoreClockUpdate (void) {
     uint32_t tmp = 0, pllsource = 0;
 
     tmp = RCC->CFGR0 & RCC_SWS;
 
-    switch (tmp)
-    {
-        case 0x00:
-            SystemCoreClock = HSI_VALUE;
-            break;
-        case 0x04:
-            SystemCoreClock = HSE_VALUE;
-            break;
-        case 0x08:
-            pllsource = RCC->CFGR0 & RCC_PLLSRC;
-            if (pllsource == 0x00)
-            {
-                SystemCoreClock = HSI_VALUE * 2;
-            }
-            else
-            {
-                SystemCoreClock = HSE_VALUE * 2;
-            }
-            break;
-        default:
-            SystemCoreClock = HSI_VALUE;
-            break;
+    switch (tmp) {
+    case 0x00:
+        SystemCoreClock = HSI_VALUE;
+        break;
+    case 0x04:
+        SystemCoreClock = HSE_VALUE;
+        break;
+    case 0x08:
+        pllsource = RCC->CFGR0 & RCC_PLLSRC;
+        if (pllsource == 0x00) {
+            SystemCoreClock = HSI_VALUE * 2;
+        } else {
+            SystemCoreClock = HSE_VALUE * 2;
+        }
+        break;
+    default:
+        SystemCoreClock = HSI_VALUE;
+        break;
     }
 
-    tmp = AHBPrescTable[((RCC->CFGR0 & RCC_HPRE) >> 4)];
+    tmp = AHBPrescTable(((RCC->CFGR0 & RCC_HPRE) >> 4));
 
-    if(((RCC->CFGR0 & RCC_HPRE) >> 4) < 8)
-    {
+    if(((RCC->CFGR0 & RCC_HPRE) >> 4) < 8) {
         SystemCoreClock /= tmp;
-    }
-    else
-    {
+    } else {
         SystemCoreClock >>= tmp;
     }
 }
