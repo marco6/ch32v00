@@ -1,5 +1,6 @@
 
-OPT = -Os -flto -ffat-lto-objects
+OPT = -Os
+LTO = -flto -ffat-lto-objects
 
 BUILD_DIR = build
 
@@ -24,6 +25,24 @@ src/system.c \
 src/tim.c \
 src/usart.c \
 src/wwdg.c \
+
+NO_LTO_C_SOURCES = \
+src/libgloss/close.c \
+src/libgloss/getpid.c \
+src/libgloss/inbyte.c \
+src/libgloss/isatty.c \
+src/libgloss/lseek.c \
+src/libgloss/print.c \
+src/libgloss/read.c \
+src/libgloss/sbrk.c \
+src/libgloss/unlink.c \
+src/libgloss/fstat.c \
+src/libgloss/kill.c \
+src/libgloss/open.c \
+src/libgloss/outbyte.c \
+src/libgloss/putnum.c \
+src/libgloss/stat.c \
+src/libgloss/write.c \
 
 
 # ASM sources
@@ -51,13 +70,11 @@ C_INCLUDES =  \
 -Iinclude \
 
 # compile gcc flags
-ASFLAGS = $(MCU) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+ASFLAGS = $(MCU) $(AS_INCLUDES) $(OPT) $(LTO) -Wall -fdata-sections -ffunction-sections
+CFLAGS = $(MCU) $(C_INCLUDES) $(OPT) $(LTO) -Wall -fdata-sections -ffunction-sections
 
-CFLAGS = $(MCU) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
-
-ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
-endif
+NO_LTO_ASFLAGS = $(MCU) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
+NO_LTO_CFLAGS = $(MCU) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
 
 # FIXME non penso serva
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
@@ -68,8 +85,14 @@ LIBDIR =
 # default action: build all
 all: $(BUILD_DIR)/libwch.a
 
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
+LTO_OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
+NO_LTO_OBJECTS = $(addprefix $(BUILD_DIR)/no-lto-,$(notdir $(NO_LTO_C_SOURCES:.c=.o)))
+OBJECTS = $(LTO_OBJECTS) $(NO_LTO_OBJECTS)
+
+vpath %.c $(sort $(dir $(C_SOURCES) $(NO_LTO_C_SOURCES)))
+
+$(BUILD_DIR)/no-lto-%.o: %.c Makefile | $(BUILD_DIR)
+	$(CC) -c $(NO_LTO_CFLAGS) $< -o $@
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 	$(CC) -c $(CFLAGS) $< -o $@

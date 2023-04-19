@@ -647,19 +647,12 @@ void USART_IrDACmd(USART_TypeDef *USARTx, FunctionalState NewState)
  *
  * @return  bitstatus: SET or RESET
  */
-FlagStatus USART_GetFlagStatus(USART_TypeDef *USARTx, uint16_t USART_FLAG)
-{
-    FlagStatus bitstatus = RESET;
-
-    if((USARTx->STATR & USART_FLAG) != (uint16_t)RESET)
-    {
-        bitstatus = SET;
+FlagStatus USART_GetFlagStatus(USART_TypeDef *USARTx, uint16_t USART_FLAG) {
+    if((USARTx->STATR & USART_FLAG) != (uint16_t)RESET) {
+        return SET;
+    } else {
+        return RESET;
     }
-    else
-    {
-        bitstatus = RESET;
-    }
-    return bitstatus;
 }
 
 /*********************************************************************

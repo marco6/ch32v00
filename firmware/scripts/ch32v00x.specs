@@ -22,7 +22,7 @@
 %(ch32v00x_cc1plus) %(ch32v00x_cpu) %(ch32v00x_gc)
 
 *link_gcc_c_sequence: 
-%(ch32v00x_link_gcc_c_sequence) --start-group -lnosys -lm_nano -lwch --end-group
+%(ch32v00x_link_gcc_c_sequence) --start-group -lc_nano -lm_nano -lwch --end-group
 
 *startfile:
 ch32v00x_crt0%O%s

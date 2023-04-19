@@ -1,40 +1,6 @@
 #include <ch32v00x/device.h>
 #include <ch32v00x/usart.h>
 
-#include <errno.h>
-#include <stddef.h>
-#include <sys/errno.h>
-#include <unistd.h>
-
-__attribute__((used)) 
-int _write(int fd, char *buf, int size) {
-    if (fd != STDOUT_FILENO) {
-        errno = EBADF;
-        return -1;
-    }
-
-    for (int i = 0; i < size; i++) {
-        while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {}
-        USART_SendData(USART1, *buf++);
-    }
-
-    return size;
-}
-
-__attribute__((used)) 
-void *_sbrk(ptrdiff_t incr)
-{
-    extern char _end[];
-    extern char _heap_end[];
-    static char *curbrk = _end;
-
-    if ((curbrk + incr < _end) || (curbrk + incr > _heap_end))
-    return NULL - 1;
-
-    curbrk += incr;
-    return curbrk - incr;
-}
-
 /* 
 * Uncomment the line corresponding to the desired System clock (SYSCLK) frequency (after 
 * reset the HSI is used as SYSCLK source).

@@ -1,0 +1,17 @@
+These files are directly copyied from newlib (libgloss).
+The only change is to add an underscore (`_`) to the names,
+so that they can easily link to the library itself.
+
+I prefer to use those instead of relying on libnosys as:
+
+ - they don't return errors in case there are no errors;
+ - they support some of the functionality, when present;
+ - my work can in theory be upstreamed, once stable enough.
+
+Another advantage of this approach is branch pruning: many
+of the functions will always fail or will return a constant
+value. By having directly inside libgloss and having libc
+not define them (see configure.host), would make it possible
+to reduce the amount of code that gets generated. Given the
+very limited amount of FLASH memory available (16KiB) it 
+would be a very good idea to follow this path.
