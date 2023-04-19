@@ -173,7 +173,7 @@ apps:
       - home
       - hardware-observe
       - raw-usb
-
+      - network-bind
 parts:
   binutils:
     plugin: autotools
