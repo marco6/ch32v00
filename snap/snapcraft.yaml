@@ -421,6 +421,7 @@ parts:
     source-type: local
     plugin: nil
     override-build: |
+      mkdir -p "${SNAPCRAFT_PART_INSTALL}/usr/riscv-none-elf/share/"
       cp --archive --link --no-dereference --update . "${SNAPCRAFT_PART_INSTALL}/usr/riscv-none-elf/share/"
 
   cleanup:

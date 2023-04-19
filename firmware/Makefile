@@ -132,14 +132,13 @@ install-headers:
 	install -D -m 644 include/ch32v00x/adc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/adc.h
 	install -D -m 644 include/ch32v00x/core.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/core.h
 	install -D -m 644 include/ch32v00x/dbgmcu.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/dbgmcu.h
-	install -D -m 644 include/ch32v00x/debug.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/debug.h
 	install -D -m 644 include/ch32v00x/dma.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/dma.h
 	install -D -m 644 include/ch32v00x/exti.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/exti.h
 	install -D -m 644 include/ch32v00x/flash.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/flash.h
 	install -D -m 644 include/ch32v00x/gpio.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/gpio.h
 	install -D -m 644 include/ch32v00x/i2c.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/i2c.h
 	install -D -m 644 include/ch32v00x/iwdg.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/iwdg.h
-	install -D -m 644 include/ch32v00x/misc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/misc.h
+	install -D -m 644 include/ch32v00x/nvic.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/nvic.h
 	install -D -m 644 include/ch32v00x/opa.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/opa.h
 	install -D -m 644 include/ch32v00x/pwr.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/pwr.h
 	install -D -m 644 include/ch32v00x/rcc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/rcc.h
