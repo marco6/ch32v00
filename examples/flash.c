@@ -6,7 +6,7 @@
 #include <ch32v00x/flash.h>
 #include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
-#include <ch32v00x/system.h>
+#include <ch32v00x/sysclk.h>
 #include <ch32v00x/usart.h>
 
 #include <inttypes.h>

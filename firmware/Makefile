@@ -143,11 +143,10 @@ install-headers:
 	install -D -m 644 include/ch32v00x/pwr.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/pwr.h
 	install -D -m 644 include/ch32v00x/rcc.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/rcc.h
 	install -D -m 644 include/ch32v00x/spi.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/spi.h
-	install -D -m 644 include/ch32v00x/system.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/system.h
+	install -D -m 644 include/ch32v00x/sysclk.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/sysclk.h
 	install -D -m 644 include/ch32v00x/tim.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/tim.h
 	install -D -m 644 include/ch32v00x/usart.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/usart.h
 	install -D -m 644 include/ch32v00x/wwdg.h $(DESTDIR)/usr/riscv-none-elf/include/ch32v00x/wwdg.h
-
 
 clean:
 	-rm -fR $(BUILD_DIR)

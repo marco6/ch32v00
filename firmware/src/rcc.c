@@ -1,4 +1,4 @@
-#include <ch32v00x/system.h>
+#include <ch32v00x/sysclk.h>
 #include <ch32v00x/rcc.h>
 
 /* RCC registers bit address in the alias region */
