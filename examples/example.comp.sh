@@ -1,6 +1,6 @@
 #!/bin/bash
 
-_chv3200x_example()
+_ch32v00x_example()
 {
     local cur prev
 
@@ -37,4 +37,4 @@ _chv3200x_example()
 
     return 0
 } &&
-complete -F _chv3200x_example $nospace $filenames chv3200x.example
+complete -F _ch32v00x_example $nospace $filenames ch32v00x.example

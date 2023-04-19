@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function print_help() {
-    echo "Usage: $0 [OPTION]... EXAMPLE"
+    echo "Usage: ch32v00x.example [OPTION]... EXAMPLE"
     echo "Prints the source of EXAMPLE from the original ch32V00x SDK, or compiles"
     echo "it if requested."
     echo ""
@@ -16,7 +16,7 @@ function print_help() {
     echo "Few environmental values can be used to influence how the compiler is executed."
     echo ""
     echo "    PREFIX  can be used to specify a different compiler chain prefix."
-    echo "            The default is 'ch32v00x.' ."
+    echo "            The default is 'riscv-non-elf-' ."
     echo "    CFLAGS  can be used to specify additional compilation flags to the compiler."
     echo ""
     echo "All examples here come with the following copyright notice, which have been"
@@ -35,7 +35,7 @@ function print_help() {
     exit 0
 }
 
-PREFIX=${PREFIX:-ch32v00x.}
+PREFIX=${PREFIX:-riscv-none-elf-}
 DIR="$( dirname -- "${BASH_SOURCE[0]}"; )"
 
 name=
