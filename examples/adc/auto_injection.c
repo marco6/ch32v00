@@ -4,9 +4,9 @@
  */
 
 #include <ch32v00x/adc.h>
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -70,7 +70,6 @@ int main(void) {
     uint16_t adc_val;
     uint16_t adc_jval;
 
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

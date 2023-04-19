@@ -27,7 +27,6 @@ int main(void) {
     uint8_t i = 0;
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

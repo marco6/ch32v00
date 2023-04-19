@@ -3,8 +3,11 @@
  * Includes Standard Erase and Program, Fast Erase and Program.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/flash.h>
+#include <ch32v00x/nvic.h>
+#include <ch32v00x/rcc.h>
+#include <ch32v00x/system.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -155,7 +158,6 @@ void Flash_Test_Fast(void) {
 }
 
 int main(void) {
-    Delay_Init();
     Delay_Ms(1000);
     USART_Printf_Init(115200);
     SystemCoreClockUpdate();

@@ -6,9 +6,10 @@
  * you can refer to this routine to jump to the IAP to upgrade.
 */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/flash.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -24,7 +25,6 @@ void GoToIAP(void) {
 }
 
 int main(void) {
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

@@ -6,11 +6,11 @@
  * TIM_IT_CC1 interrupt, and the falling edge triggers the TIM_IT_CC2 interrupt.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/tim.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>

@@ -6,6 +6,7 @@
 #include <ch32v00x/dma.h>
 #include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -52,7 +53,6 @@ void DMA1_CH3_Init(void) {
 
 int main(void) {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

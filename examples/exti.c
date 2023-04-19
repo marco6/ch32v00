@@ -4,11 +4,11 @@
  * PD0 sets the pull-up input, and the falling edge triggers the interrupt.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/exti.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -45,7 +45,6 @@ void EXTI0_INT_INIT(void) {
 
 int main(void) {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

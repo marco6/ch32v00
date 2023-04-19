@@ -13,11 +13,11 @@
  *  PC1 -- PC1
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
 #include <ch32v00x/i2c.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -93,7 +93,6 @@ void IIC_Init(uint32_t bound, uint16_t address) {
 int main(void) {
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-    Delay_Init();
     USART_Printf_Init(460800);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

@@ -6,10 +6,10 @@
  * outputs positive pulse.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/tim.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>

@@ -4,10 +4,11 @@
  * This example demonstrates the MCO(PC4) pin output clock
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/system.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>

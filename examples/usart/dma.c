@@ -12,10 +12,9 @@
  *  PDO -- LED
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/dma.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/usart.h>
 
@@ -110,7 +109,6 @@ void DMA_INIT(void) {
 
 int main(void) {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    Delay_Init();
     GPIO_Toggle_INIT();
     DMA_INIT();
     USARTx_CFG(); /* USART1 */

@@ -24,11 +24,11 @@
 */
 
 #include <ch32v00x/adc.h>
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/opa.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -124,7 +124,6 @@ uint16_t Get_ADC_Average(uint8_t ch, uint8_t times) {
 int main(void) {
     uint16_t ADC_val;
 
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
     printf("OPA Test\n");

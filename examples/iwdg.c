@@ -18,10 +18,11 @@ This routine demonstrates the pull-down input of the PC1 pin. When the input is 
 
 */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
 #include <ch32v00x/iwdg.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -81,7 +82,6 @@ int main(void) {
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n",SystemCoreClock);
 
-    Delay_Init();
     KEY_Init();
     printf("IWDG test...\n");
     Delay_Ms(1000);

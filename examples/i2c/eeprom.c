@@ -9,17 +9,17 @@
  *  - WRITE EERPOM:Start + 0xA0 + 8bit Data Address + Write Data + Stop.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
 #include <ch32v00x/i2c.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 
 #if !defined(ADDRESS_LENGTH) || ((ADDRESS_LENGTH != 8) && (ADDRESS_LENGTH != 16))
-# warning "EEPROM address length not defined. Defaulting to 8bit"
+# warning "EEPROM address length not defined. Defaulting to 8bit (e.g. -DADDRESS_LENGTH={8,16})"
 # undef ADDRESS_LENGTH
 # define ADDRESS_LENGTH 8
 #endif
@@ -181,7 +181,6 @@ void AT24CXX_Write(uint16_t WriteAddr, uint8_t *pBuffer, uint16_t NumToWrite) {
 int main(void) {
     uint8_t data[SIZE];
 
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

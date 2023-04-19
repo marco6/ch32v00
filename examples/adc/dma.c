@@ -5,10 +5,10 @@
  */
 
 #include <ch32v00x/adc.h>
-#include <ch32v00x/debug.h>
 #include <ch32v00x/dma.h>
 #include <ch32v00x/gpio.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -99,7 +99,6 @@ void DMA_Tx_Init(DMA_Channel_TypeDef *channel, u32 ppadr, u32 memadr, uint16_t b
 int main(void) {
     uint16_t i;
 
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

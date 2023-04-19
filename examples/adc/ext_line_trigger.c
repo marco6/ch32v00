@@ -7,11 +7,11 @@
  */
 
 #include <ch32v00x/adc.h>
-#include <ch32v00x/debug.h>
 #include <ch32v00x/exti.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -97,11 +97,6 @@ int main(void) {
 }
 
 void ADC1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-
-/**
- * ADC1 Interrupt Service Function.
- * FIXME understood the name, but what does it do and why?
- */
 void ADC1_IRQHandler(void) {
     uint16_t ADC_val;
 

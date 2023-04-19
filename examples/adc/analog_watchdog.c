@@ -5,10 +5,10 @@
 */
 
 #include <ch32v00x/adc.h>
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -57,9 +57,9 @@ void ADC_Function_Init(void) {
     ADC_Cmd(ADC1, ENABLE);
 
     ADC_ResetCalibration(ADC1);
-    while(ADC_GetResetCalibrationStatus(ADC1)) { }
+    while (ADC_GetResetCalibrationStatus(ADC1)) { }
     ADC_StartCalibration(ADC1);
-    while(ADC_GetCalibrationStatus(ADC1)) { }
+    while (ADC_GetCalibrationStatus(ADC1)) { }
 }
 
 /**
@@ -80,13 +80,12 @@ int main(void) {
     uint16_t ADC_val;
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 
     ADC_Function_Init();
 
-    while(1) {
+    while (1) {
         ADC_val = Get_ADC_Val(ADC_Channel_2);
         Delay_Ms(500);
         printf("%04d\n", ADC_val);
@@ -94,14 +93,9 @@ int main(void) {
     }
 }
 
-
 void ADC1_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-
-/**
- * This function handles analog wathdog exception.
- */
 void ADC1_IRQHandler(void) {
-    if(ADC_GetITStatus( ADC1, ADC_IT_AWD)){
+    if (ADC_GetITStatus( ADC1, ADC_IT_AWD)){
         printf( "Enter AnalogWatchdog Interrupt\n" );
     }
 

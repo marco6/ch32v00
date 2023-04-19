@@ -6,9 +6,9 @@
  * External clock source mode 2: PC5 is used as clock input pin.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/tim.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>

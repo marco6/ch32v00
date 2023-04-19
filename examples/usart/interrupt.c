@@ -12,9 +12,8 @@
  *  PD0 -- LED
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/usart.h>
 #include <string.h>
@@ -82,7 +81,6 @@ void USARTx_CFG(void) {
 
 int main(void) {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    Delay_Init();
 
     GPIO_Toggle_INIT();
     USARTx_CFG();

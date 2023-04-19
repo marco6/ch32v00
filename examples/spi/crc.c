@@ -13,11 +13,11 @@
  *  PC7 -- PC6
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/spi.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -95,7 +95,6 @@ int main(void) {
     uint8_t crcval;
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

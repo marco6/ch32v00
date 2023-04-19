@@ -8,9 +8,8 @@
  * connected to GND, data can be sent normally.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/usart.h>
 
@@ -61,7 +60,6 @@ void USART1_ReCFG(void) {
 
 int main(void) {
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    Delay_Init();
     USART1_ReCFG();
 
     printf("USART1 Hardware Flow Control TEST\n");

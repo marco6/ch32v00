@@ -6,10 +6,10 @@
  * detects a rising edge, then starts TIM1 and TIM2.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/gpio.h>
 #include <ch32v00x/rcc.h>
 #include <ch32v00x/tim.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -58,7 +58,6 @@ void ExtTrigger_Start_Two_TIM(uint16_t arr, uint16_t psc) {
 }
 
 int main(void) {
-    Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk:%"PRIu32"\n", SystemCoreClock);
 

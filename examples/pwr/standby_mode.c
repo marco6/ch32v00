@@ -6,12 +6,12 @@
  * to set the unused GPIO to pull-down mode.
  */
 
-#include <ch32v00x/debug.h>
 #include <ch32v00x/exti.h>
 #include <ch32v00x/gpio.h>
-#include <ch32v00x/misc.h>
+#include <ch32v00x/nvic.h>
 #include <ch32v00x/pwr.h>
 #include <ch32v00x/rcc.h>
+#include <ch32v00x/usart.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -36,7 +36,6 @@ int main(void) {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    Delay_Init();
     Delay_Ms(1000);
     Delay_Ms(1000);
     EXTI_INT_INIT();
