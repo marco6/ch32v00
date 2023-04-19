@@ -44,25 +44,43 @@ typedef enum IRQn
     TIM2_IRQn = 38,          /* TIM2 global Interrupt                                */
 } IRQn_Type;
 
-/* NVIC Init Structure definition */	 
-typedef struct
-{
+typedef struct {
   uint8_t NVIC_IRQChannel;
   uint8_t NVIC_IRQChannelPreemptionPriority;
   uint8_t NVIC_IRQChannelSubPriority;
   FunctionalState NVIC_IRQChannelCmd;
 } NVIC_InitTypeDef;
- 
 
-/* Preemption_Priority_Group */
 #define NVIC_PriorityGroup_0           ((uint32_t)0x00)
 #define NVIC_PriorityGroup_1           ((uint32_t)0x01)
 #define NVIC_PriorityGroup_2           ((uint32_t)0x02)
 #define NVIC_PriorityGroup_3           ((uint32_t)0x03)
 #define NVIC_PriorityGroup_4           ((uint32_t)0x04)
 
-
+/**
+ * Configures the priority grouping - pre-emption priority and subpriority.
+ *
+ * @param NVIC_PriorityGroup specifies the priority grouping bits length.
+ * NVIC_PriorityGroup_0 - 0 bits for pre-emption priority
+ *                        4 bits for subpriority
+ * NVIC_PriorityGroup_1 - 1 bits for pre-emption priority
+ *                        3 bits for subpriority
+ * NVIC_PriorityGroup_2 - 2 bits for pre-emption priority
+ *                        2 bits for subpriority
+ * NVIC_PriorityGroup_3 - 3 bits for pre-emption priority
+ *                        1 bits for subpriority
+ * NVIC_PriorityGroup_4 - 4 bits for pre-emption priority
+ *                        0 bits for subpriority
+ */
 void NVIC_PriorityGroupConfig(uint32_t NVIC_PriorityGroup);
+
+/**
+ * Initializes the NVIC peripheral according to the specified parameters in
+ * the NVIC_InitStruct.
+ *
+ * @param NVIC_InitStruct pointer to a NVIC_InitTypeDef structure that contains
+ * the configuration information for the specified NVIC peripheral.
+ */
 void NVIC_Init(NVIC_InitTypeDef* NVIC_InitStruct);
 
 /**
