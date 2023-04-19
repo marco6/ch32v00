@@ -167,6 +167,13 @@ apps:
     plugs:
       - home
 
+  openocd:
+    command: usr/bin/openocd
+    plugs:
+      - home
+      - hardware-observe
+      - raw-usb
+
 parts:
   binutils:
     plugin: autotools
@@ -469,6 +476,48 @@ parts:
     stage:
       - -usr/share/info/
 
+  # FIXME: spostare all'inizio
+  openocd:
+    source: https://github.com/karlp/openocd-hacks
+    source-type: git
+    source-branch: mrs-wch-riscv-221010
+    plugin: nil
+    override-build: |
+      ./bootstrap
+      ./configure                 \
+          --prefix="/usr"         \
+          --disable-werror        \
+          --disable-ftdi          \
+          --disable-stlink        \
+          --disable-ti-icdi       \
+          --disable-ftdi-oscan1   \
+          --disable-ulink         \
+          --disable-usb-blaster-2 \
+          --disable-usb-blaster   \
+          --disable-ft232r        \
+          --disable-vsllink       \
+          --disable-xds110        \
+          --disable-osbdm         \
+          --disable-opendous      \
+          --disable-armjtagew     \
+          --disable-rlink         \
+          --disable-aice          \
+          --disable-jlink         \
+          --disable-buspirate
+      make -j"${SNAPCRAFT_PARALLEL_BUILD_COUNT}"
+      make install-strip DESTDIR="${SNAPCRAFT_PART_INSTALL}"
+    build-packages:
+      - pkg-config
+      - build-essential
+      - autoconf
+      - automake
+      - libtool
+      - libusb-1.0-0-dev
+      - libhidapi-dev
+    stage-packages:
+      - libusb-1.0-0
+      - libhidapi-hidraw0
+
   firmware:
     after:
       - libs
@@ -478,7 +527,7 @@ parts:
 
   examples:
     after:
-      - firmware
+      - libs
     source: examples
     source-type: local
     plugin: nil
@@ -492,5 +541,3 @@ parts:
     plugin: nil
     override-prime: |
 
-# FIXME that branch is horrible.
-# openocd
