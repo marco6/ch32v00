@@ -8,102 +8,164 @@ description: |
 
 grade: devel
 base: core22
-confinement: devmode 
+confinement: strict 
 
 apps:
   addr2line:
     command: usr/bin/riscv-none-elf-addr2line
+    plugs:
+      - home
 
   ar:
     command: usr/bin/riscv-none-elf-ar
+    plugs:
+      - home
 
   as:
     command: usr/bin/riscv-none-elf-as
+    plugs:
+      - home
 
   cplusplus: # FIXME: c++
     command: usr/bin/riscv-none-elf-cplusplus # c++
+    plugs:
+      - home
 
   cplusplus-filt: # FIXME c++filt
     command: usr/bin/riscv-none-elf-cplusplusfilt
+    plugs:
+      - home
 
   cpp:
     command: usr/bin/riscv-none-elf-cpp
+    plugs:
+      - home
 
   elfedit:
     command: usr/bin/riscv-none-elf-elfedit
+    plugs:
+      - home
 
   gplusplus: # FIXME g++
     command: usr/bin/riscv-none-elf-gplusplus # g++
+    plugs:
+      - home
 
   gcc:
     command: usr/bin/riscv-none-elf-gcc
+    plugs:
+      - home
 
   gcc-ar:
     command: usr/bin/riscv-none-elf-gcc-ar
+    plugs:
+      - home
 
   gcc-nm:
     command: usr/bin/riscv-none-elf-gcc-nm
+    plugs:
+      - home
 
   gcc-ranlib:
     command: usr/bin/riscv-none-elf-gcc-ranlib
+    plugs:
+      - home
 
   gcov:
     command: usr/bin/riscv-none-elf-gcov
+    plugs:
+      - home
 
   gcov-dump:
     command: usr/bin/riscv-none-elf-gcov-dump
+    plugs:
+      - home
 
   gcov-tool:
     command: usr/bin/riscv-none-elf-gcov-tool
+    plugs:
+      - home
 
   gprof:
     command: usr/bin/riscv-none-elf-gprof
+    plugs:
+      - home
 
   ld:
     command: usr/bin/riscv-none-elf-ld
+    plugs:
+      - home
 
   ld-bfd: # FIXME ld.bfd
     command: usr/bin/riscv-none-elf-ld.bfd
+    plugs:
+      - home
 
   lto-dump:
     command: usr/bin/riscv-none-elf-lto-dump
+    plugs:
+      - home
 
   nm:
     command: usr/bin/riscv-none-elf-nm
+    plugs:
+      - home
 
   objcopy:
     command: usr/bin/riscv-none-elf-objcopy
+    plugs:
+      - home
 
   objdump:
     command: usr/bin/riscv-none-elf-objdump
+    plugs:
+      - home
 
   ranlib:
     command: usr/bin/riscv-none-elf-ranlib
+    plugs:
+      - home
 
   readelf:
     command: usr/bin/riscv-none-elf-readelf
+    plugs:
+      - home
 
   size:
     command: usr/bin/riscv-none-elf-size
+    plugs:
+      - home
 
   strings:
     command: usr/bin/riscv-none-elf-strings
+    plugs:
+      - home
 
   strip:
     command: usr/bin/riscv-none-elf-strip
+    plugs:
+      - home
 
   gdb:
     command: usr/bin/riscv-none-elf-gdb
+    plugs:
+      - home
 
   gdb-add-index:
     command: usr/bin/riscv-none-elf-gdb-add-index
+    plugs:
+      - home
 
   run:
     command: usr/bin/riscv-none-elf-run
+    plugs:
+      - home
 
   example:
     command: usr/riscv-none-elf/share/example.sh
     completer: usr/riscv-none-elf/share/example.comp.sh
+    plugs:
+      - home
 
 parts:
   binutils:
