@@ -103,7 +103,7 @@ apps:
 
   example:
     command: usr/riscv-none-elf/share/example.sh
-    completer: : usr/riscv-none-elf/share/example.comp.sh
+    completer: usr/riscv-none-elf/share/example.comp.sh
 
 parts:
   binutils:
