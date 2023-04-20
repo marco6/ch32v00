@@ -138,36 +138,338 @@ typedef struct
 #define USART_FLAG_FE                        ((uint16_t)0x0002)
 #define USART_FLAG_PE                        ((uint16_t)0x0001)
 
-void       USART_Printf_Init(uint32_t baudrate); // FIXME this should probably go away 
-void       USART_DeInit(USART_TypeDef *USARTx);
-void       USART_Init(USART_TypeDef *USARTx, USART_InitTypeDef *USART_InitStruct);
-void       USART_StructInit(USART_InitTypeDef *USART_InitStruct);
-void       USART_ClockInit(USART_TypeDef *USARTx, USART_ClockInitTypeDef *USART_ClockInitStruct);
-void       USART_ClockStructInit(USART_ClockInitTypeDef *USART_ClockInitStruct);
-void       USART_Cmd(USART_TypeDef *USARTx, FunctionalState NewState);
-void       USART_ITConfig(USART_TypeDef *USARTx, uint16_t USART_IT, FunctionalState NewState);
-void       USART_DMACmd(USART_TypeDef *USARTx, uint16_t USART_DMAReq, FunctionalState NewState);
-void       USART_SetAddress(USART_TypeDef *USARTx, uint8_t USART_Address);
-void       USART_WakeUpConfig(USART_TypeDef *USARTx, uint16_t USART_WakeUp);
-void       USART_ReceiverWakeUpCmd(USART_TypeDef *USARTx, FunctionalState NewState);
+/**
+ * Initializes the USARTx peripheral.
+ *
+ * @param baudrate USART communication baud rate.
+ */
+void USART_Printf_Init(uint32_t baudrate); // FIXME this should probably go away 
+
+/**
+ * Deinitializes the USARTx peripheral registers to their default
+ * reset values.
+ *
+ * @param USARTx where x can be 1 to select the UART peripheral.
+ */
+void USART_DeInit(USART_TypeDef *USARTx);
+
+/**
+ * Initializes the USARTx peripheral according to the specified
+ * parameters in the USART_InitStruct.
+ *
+ * @param USARTx where x can be 1 to select the UART peripheral.
+ * @param USART_InitStruct pointer to a USART_InitTypeDef structure
+ * that contains the configuration information for the specified
+ * USART peripheral.
+ */
+void USART_Init(USART_TypeDef *USARTx, USART_InitTypeDef *USART_InitStruct);
+
+/**
+ * Fills each USART_InitStruct member with its default value.
+ *
+ * @param USART_InitStruct: pointer to a USART_InitTypeDef structure
+ * which will be initialized.
+ */
+void USART_StructInit(USART_InitTypeDef *USART_InitStruct);
+
+/**
+ * Initializes the USARTx peripheral Clock according to the
+ * specified parameters in the USART_ClockInitStruct .
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_ClockInitStruct pointer to a USART_ClockInitTypeDef
+ * structure that contains the configuration information for the specified
+ * USART peripheral.
+ */
+void USART_ClockInit(USART_TypeDef *USARTx, USART_ClockInitTypeDef *USART_ClockInitStruct);
+
+/**
+ * Fills each USART_ClockStructInit member with its default value.
+ *
+ * @param USART_ClockInitStruct: pointer to a USART_ClockInitTypeDef
+ * structure which will be initialized.
+ */
+void USART_ClockStructInit(USART_ClockInitTypeDef *USART_ClockInitStruct);
+
+/**
+ * Enables or disables the specified USART peripheral.
+ * Reset values (affects also the I2Ss).
+ *
+ * @param  USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_Cmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Enables or disables the specified USART interrupts.
+ * Reset values (affects also the I2Ss).
+ *
+ * @param USARTx where x can be to select the USART peripheral.
+ * @param USART_IT specifies the USART interrupt sources to be enabled or disabled.
+ * Available values:
+ *    USART_IT_LBD - LIN Break detection interrupt.
+ *    USART_IT_TXE - Transmit Data Register empty interrupt.
+ *    USART_IT_TC - Transmission complete interrupt.
+ *    USART_IT_RXNE - Receive Data register not empty interrupt.
+ *    USART_IT_IDLE - Idle line detection interrupt.
+ *    USART_IT_PE - Parity Error interrupt.
+ *    USART_IT_ERR - Error interrupt.
+ * @param NewState - ENABLE or DISABLE.
+ */
+void USART_ITConfig(USART_TypeDef *USARTx, uint16_t USART_IT, FunctionalState NewState);
+
+/**
+ * Enables or disables the USART DMA interface.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_DMAReq specifies the DMA request.
+ * Available values:
+ *    USART_DMAReq_Tx - USART DMA transmit request.
+ *    USART_DMAReq_Rx - USART DMA receive request.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_DMACmd(USART_TypeDef *USARTx, uint16_t USART_DMAReq, FunctionalState NewState);
+
+/**
+ * Sets the address of the USART node.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_Address indicates the address of the USART node.
+ */
+void USART_SetAddress(USART_TypeDef *USARTx, uint8_t USART_Address);
+
+/**
+ * Selects the USART WakeUp method.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_WakeUp specifies the USART wakeup method.
+ * Available values:
+ *    USART_WakeUp_IdleLine - WakeUp by an idle line detection.
+ *    USART_WakeUp_AddressMark - WakeUp by an address mark.
+ */
+void USART_WakeUpConfig(USART_TypeDef *USARTx, uint16_t USART_WakeUp);
+
+/**
+ * Determines if the USART is in mute mode or not.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_ReceiverWakeUpCmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Sets the USART LIN Break detection length.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_LINBreakDetectLength specifies the LIN break detection length.
+ * Available values:
+ *    USART_LINBreakDetectLength_10b - 10-bit break detection.
+ *    USART_LINBreakDetectLength_11b - 11-bit break detection.
+ */
 void       USART_LINBreakDetectLengthConfig(USART_TypeDef *USARTx, uint16_t USART_LINBreakDetectLength);
-void       USART_LINCmd(USART_TypeDef *USARTx, FunctionalState NewState);
-void       USART_SendData(USART_TypeDef *USARTx, uint16_t Data);
-uint16_t   USART_ReceiveData(USART_TypeDef *USARTx);
-void       USART_SendBreak(USART_TypeDef *USARTx);
-void       USART_SetGuardTime(USART_TypeDef *USARTx, uint8_t USART_GuardTime);
-void       USART_SetPrescaler(USART_TypeDef *USARTx, uint8_t USART_Prescaler);
-void       USART_SmartCardCmd(USART_TypeDef *USARTx, FunctionalState NewState);
-void       USART_SmartCardNACKCmd(USART_TypeDef *USARTx, FunctionalState NewState);
-void       USART_HalfDuplexCmd(USART_TypeDef *USARTx, FunctionalState NewState);
-void       USART_OverSampling8Cmd(USART_TypeDef *USARTx, FunctionalState NewState);
-void       USART_OneBitMethodCmd(USART_TypeDef *USARTx, FunctionalState NewState);
-void       USART_IrDAConfig(USART_TypeDef *USARTx, uint16_t USART_IrDAMode);
-void       USART_IrDACmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Enables or disables the USART LIN mode.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_LINCmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Transmits single data through the USARTx peripheral.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param Data the data to transmit.
+ */
+void USART_SendData(USART_TypeDef *USARTx, uint16_t Data);
+
+/**
+ * Returns the most recent received data by the USARTx peripheral.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ *
+ * @return  The received data.
+ */
+uint16_t USART_ReceiveData(USART_TypeDef *USARTx);
+
+/**
+ * Transmits break characters.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ */
+void USART_SendBreak(USART_TypeDef *USARTx);
+
+/**
+ * Sets the specified USART guard time.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_GuardTime specifies the guard time.
+ */
+void USART_SetGuardTime(USART_TypeDef *USARTx, uint8_t USART_GuardTime);
+
+/**
+ * Sets the system clock prescaler.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_Prescaler specifies the prescaler clock.
+ */
+void USART_SetPrescaler(USART_TypeDef *USARTx, uint8_t USART_Prescaler);
+
+/**
+ * Enables or disables the USART Smart Card mode.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_SmartCardCmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Enables or disables NACK transmission.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_SmartCardNACKCmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Enables or disables the USART Half Duplex communication.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_HalfDuplexCmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Enables or disables the USART's 8x oversampling mode.
+ *
+ * Note:
+ * This function has to be called before calling USART_Init()
+ * function in order to have correct baudrate Divider value. 
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_OverSampling8Cmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Enables or disables the USART's one bit sampling method.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_OneBitMethodCmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Configures the USART's IrDA interface.
+ *
+ * @param USARTx - where x can be 1 to select the USART peripheral.
+ * @param USART_IrDAMode - specifies the IrDA mode.
+ * Available values:
+ *    USART_IrDAMode_LowPower.
+ *    USART_IrDAMode_Normal.
+ */
+void USART_IrDAConfig(USART_TypeDef *USARTx, uint16_t USART_IrDAMode);
+
+/**
+ * Enables or disables the USART's IrDA interface.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param NewState ENABLE or DISABLE.
+ */
+void USART_IrDACmd(USART_TypeDef *USARTx, FunctionalState NewState);
+
+/**
+ * Checks whether the specified USART flag is set or not.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_FLAG specifies the flag to check.
+ * Available values:
+ *    USART_FLAG_LBD - LIN Break detection flag.
+ *    USART_FLAG_TXE - Transmit data register empty flag.
+ *    USART_FLAG_TC - Transmission Complete flag.
+ *    USART_FLAG_RXNE - Receive data register not empty flag.
+ *    USART_FLAG_IDLE - Idle Line detection flag.
+ *    USART_FLAG_ORE - OverRun Error flag.
+ *    USART_FLAG_NE - Noise Error flag.
+ *    USART_FLAG_FE - Framing Error flag.
+ *    USART_FLAG_PE - Parity Error flag.
+ *
+ * @return bitstatus: SET or RESET
+ */
 FlagStatus USART_GetFlagStatus(USART_TypeDef *USARTx, uint16_t USART_FLAG);
-void       USART_ClearFlag(USART_TypeDef *USARTx, uint16_t USART_FLAG);
-ITStatus   USART_GetITStatus(USART_TypeDef *USARTx, uint16_t USART_IT);
-void       USART_ClearITPendingBit(USART_TypeDef *USARTx, uint16_t USART_IT);
+
+/**
+ * Clears the USARTx's pending flags.
+ *
+ * Note:
+ *  - PE (Parity error), FE (Framing error), NE (Noise error), ORE (OverRun 
+ *    error) and IDLE (Idle line detected) flags are cleared by software 
+ *    sequence: a read operation to USART_STATR register (USART_GetFlagStatus()) 
+ *    followed by a read operation to USART_DATAR register (USART_ReceiveData()).
+ *  - RXNE flag can be also cleared by a read to the USART_DATAR register 
+ *    (USART_ReceiveData()).
+ *  - TC flag can be also cleared by software sequence: a read operation to 
+ *    USART_STATR register (USART_GetFlagStatus()) followed by a write operation
+ *    to USART_DATAR register (USART_SendData()).
+ *  - TXE flag is cleared only by a write to the USART_DATAR register 
+ *    (USART_SendData()).
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_FLAG specifies the flag to clear.
+ * Available values:
+ *    USART_FLAG_LBD - LIN Break detection flag.
+ *    USART_FLAG_TC - Transmission Complete flag.
+ *    USART_FLAG_RXNE - Receive data register not empty flag.
+ */
+void USART_ClearFlag(USART_TypeDef *USARTx, uint16_t USART_FLAG);
+
+/**
+ * Checks whether the specified USART interrupt has occurred or not.
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_IT specifies the USART interrupt source to check.
+ * Available values:
+ *    USART_IT_LBD - LIN Break detection interrupt.
+ *    USART_IT_TXE - Tansmit Data Register empty interrupt.
+ *    USART_IT_TC - Transmission complete interrupt.
+ *    USART_IT_RXNE - Receive Data register not empty interrupt.
+ *    USART_IT_IDLE - Idle line detection interrupt.
+ *    USART_IT_ORE_RX - OverRun Error interrupt if the RXNEIE bit is set.
+ *    USART_IT_ORE_ER - OverRun Error interrupt if the EIE bit is set.
+ *    USART_IT_NE - Noise Error interrupt.
+ *    USART_IT_FE - Framing Error interrupt.
+ *    USART_IT_PE - Parity Error interrupt.
+ *
+ * @return  bitstatus: SET or RESET.
+ */
+ITStatus USART_GetITStatus(USART_TypeDef *USARTx, uint16_t USART_IT);
+
+/**
+ * Clears the USARTx's interrupt pending bits.
+ *
+ * Note:
+ *  - PE (Parity error), FE (Framing error), NE (Noise error), ORE (OverRun 
+ *    error) and IDLE (Idle line detected) pending bits are cleared by 
+ *    software sequence: a read operation to USART_STATR register 
+ *    (USART_GetITStatus()) followed by a read operation to USART_DATAR register 
+ *    (USART_ReceiveData()).
+ *  - RXNE pending bit can be also cleared by a read to the USART_DATAR register 
+ *    (USART_ReceiveData()).
+ *  - TC pending bit can be also cleared by software sequence: a read 
+ *    operation to USART_STATR register (USART_GetITStatus()) followed by a write 
+ *    operation to USART_DATAR register (USART_SendData()).
+ *  - TXE pending bit is cleared only by a write to the USART_DATAR register 
+ *    (USART_SendData()).
+ *
+ * @param USARTx where x can be 1 to select the USART peripheral.
+ * @param USART_IT specifies the interrupt pending bit to clear. 
+ * Available values:
+ *   USART_IT_LBD - LIN Break detection interrupt.
+ *   USART_IT_TC - Transmission complete interrupt.
+ *   USART_IT_RXNE - Receive Data register not empty interrupt.
+ */
+void USART_ClearITPendingBit(USART_TypeDef *USARTx, uint16_t USART_IT);
 
 #ifdef __cplusplus
 }
