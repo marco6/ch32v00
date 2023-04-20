@@ -6,7 +6,6 @@ description: |
   the compiler chain (gcc), the firmware library, open OCD as well as few helper 
   scripts.
 
-grade: devel
 base: core22
 confinement: strict 
 
