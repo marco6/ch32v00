@@ -26,7 +26,8 @@ static uint8_t AHBPrescTable(uint8_t i) {
     //   };
     return (i&0x7) + 1;
 }
- void InitSysClock(void) __attribute__((weak));
+
+void InitSysClock(void) __attribute__((weak));
 void InitSysClock(void) { }
 
 /**
