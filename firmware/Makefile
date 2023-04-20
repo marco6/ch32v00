@@ -46,8 +46,8 @@ src/libgloss/write.c \
 
 
 # ASM sources
-ASM_SOURCES =  \
-src/ch32v00x_startup.S \
+AS_SOURCES =  \
+src/startup.S \
 
 TARGET := riscv-none-elf-
 
@@ -83,13 +83,14 @@ LIBS = -lc -lm -lnosys
 LIBDIR = 
 
 # default action: build all
-all: $(BUILD_DIR)/libwch.a
+all: $(BUILD_DIR)/libwch.a $(BUILD_DIR)/startup.o
 
 LTO_OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 NO_LTO_OBJECTS = $(addprefix $(BUILD_DIR)/no-lto-,$(notdir $(NO_LTO_C_SOURCES:.c=.o)))
 OBJECTS = $(LTO_OBJECTS) $(NO_LTO_OBJECTS)
 
 vpath %.c $(sort $(dir $(C_SOURCES) $(NO_LTO_C_SOURCES)))
+vpath %.S $(sort $(dir $(AS_SOURCES)))
 
 $(BUILD_DIR)/no-lto-%.o: %.c Makefile | $(BUILD_DIR)
 	$(CC) -c $(NO_LTO_CFLAGS) $< -o $@
@@ -100,6 +101,7 @@ $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
+# FIXME remove startup.o from $(OBJECTS)
 $(BUILD_DIR)/libwch.a: $(OBJECTS) Makefile
 	$(AR) rcs $@ $(OBJECTS)
 	
@@ -118,7 +120,7 @@ install-strip-lib: $(BUILD_DIR)/libwch.a
 
 install-lib: $(BUILD_DIR)/libwch.a
 	install -D -m 644 $(BUILD_DIR)/libwch.a $(DESTDIR)/usr/riscv-none-elf/lib/libwch.a
-	install -D -m 644 $(BUILD_DIR)/ch32v00x_startup.o $(DESTDIR)/usr/riscv-none-elf/lib/ch32v00x_crt0.o
+	install -D -m 644 $(BUILD_DIR)/startup.o $(DESTDIR)/usr/riscv-none-elf/lib/ch32v00x_crt0.o
 
 install-scripts:
 	install -D -m 644 scripts/ch32v00x.specs $(DESTDIR)/usr/riscv-none-elf/lib/ch32v00x.specs
