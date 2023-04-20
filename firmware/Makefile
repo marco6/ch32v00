@@ -79,9 +79,6 @@ NO_LTO_CFLAGS = $(MCU) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sec
 # FIXME non penso serva
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 
-LIBS = -lc -lm -lnosys
-LIBDIR = 
-
 # default action: build all
 all: $(BUILD_DIR)/libwch.a $(BUILD_DIR)/startup.o
 
@@ -101,7 +98,6 @@ $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
-# FIXME remove startup.o from $(OBJECTS)
 $(BUILD_DIR)/libwch.a: $(OBJECTS) Makefile
 	$(AR) rcs $@ $(OBJECTS)
 	
