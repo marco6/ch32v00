@@ -7,7 +7,6 @@ extern "C" {
 
 #include <stdint.h>
 
-/* IO definitions */
 #ifdef __cplusplus
   #define     __I     volatile                /*!< defines 'read only' permissions      */
 #else
@@ -50,15 +49,15 @@ typedef int16_t s16;
 typedef int8_t  s8;
 
 typedef enum { NoREADY = 0, READY = !NoREADY } ErrorStatus;
-
 typedef enum { DISABLE = 0, ENABLE = !DISABLE } FunctionalState;
-
 typedef enum { RESET = 0, SET = !RESET } FlagStatus, ITStatus;
 
 #define RV_STATIC_INLINE  static inline
 
-/* memory mapped structure for Program Fast Interrupt Controller (PFIC) */
-typedef struct {
+/**
+ * memory mapped structure for Program Fast Interrupt Controller (PFIC)
+ */
+typedef struct PFIC_Type {
     __I  uint32_t ISR[8];
     __I  uint32_t IPR[8];
     __IO uint32_t ITHRESDR;
@@ -84,8 +83,10 @@ typedef struct {
     __IO uint32_t SCTLR;
 } PFIC_Type;
 
-/* memory mapped structure for SysTick */
-typedef struct {
+/**
+ * memory mapped structure for SysTick
+ */
+typedef struct SysTick_Type {
     __IO uint32_t CTLR;
     __IO uint32_t SR;
     __IO uint32_t CNT;
@@ -99,19 +100,13 @@ typedef struct {
 #define NVIC_KEY1       ((uint32_t)0xFA050000)
 #define	NVIC_KEY2	    ((uint32_t)0xBCAF0000)
 #define	NVIC_KEY3		((uint32_t)0xBEEF0000)
-
 #define SysTick         ((SysTick_Type *) 0xE000F000)
 
 
-/*********************************************************************
- * @fn      __enable_irq
- *
- * @brief   Enable Global Interrupt
- *
- * @return  none
+/**
+ * Enable Global Interrupt
  */
-RV_STATIC_INLINE void __enable_irq()
-{
+RV_STATIC_INLINE void __enable_irq() {
   uint32_t result;
 
   __asm volatile("csrr %0," "mstatus": "=r"(result));
@@ -119,15 +114,10 @@ RV_STATIC_INLINE void __enable_irq()
   __asm volatile ("csrw mstatus, %0" : : "r" (result) );
 }
 
-/*********************************************************************
- * @fn      __disable_irq
- *
- * @brief   Disable Global Interrupt
- *
- * @return  none
+/**
+ * Disable Global Interrupt
  */
-RV_STATIC_INLINE void __disable_irq()
-{
+RV_STATIC_INLINE void __disable_irq() {
   uint32_t result;
 
   __asm volatile("csrr %0," "mstatus": "=r"(result));
@@ -135,39 +125,26 @@ RV_STATIC_INLINE void __disable_irq()
   __asm volatile ("csrw mstatus, %0" : : "r" (result) );
 }
 
-/*********************************************************************
- * @fn      __NOP
- *
- * @brief   nop
- *
- * @return  none
+/**
+ * nop
  */
-RV_STATIC_INLINE void __NOP()
-{
+RV_STATIC_INLINE void __NOP() {
   __asm volatile ("nop");
 }
 
-/*********************************************************************
- * @fn       __WFI
- *
- * @brief   Wait for Interrupt
- *
- * @return  none
+/**
+ * Wait for Interrupt
  */
-__attribute__( ( always_inline ) ) RV_STATIC_INLINE void __WFI(void)
+__attribute__((always_inline)) RV_STATIC_INLINE void __WFI(void)
 {
   NVIC->SCTLR &= ~(1<<3);   // wfi
   asm volatile ("wfi");
 }
 
-/*********************************************************************
- * @fn       __WFE
- *
- * @brief   Wait for Events
- *
- * @return  none
+/**
+ * Wait for Events
  */
-__attribute__( ( always_inline ) ) RV_STATIC_INLINE void __WFE(void)
+__attribute__((always_inline)) RV_STATIC_INLINE void __WFE(void)
 {
   uint32_t t;
 
@@ -178,33 +155,123 @@ __attribute__( ( always_inline ) ) RV_STATIC_INLINE void __WFE(void)
   asm volatile ("wfi");
 }
 
+/**
+ * Return the Machine Status Register
+ *
+ * @return  mstatus value
+ */
+uint32_t __get_MSTATUS(void);
 
-/* Core_Exported_Functions */  
-extern uint32_t __get_MSTATUS(void);
-extern void __set_MSTATUS(uint32_t value);
-extern uint32_t __get_MISA(void);
-extern void __set_MISA(uint32_t value);
-extern uint32_t __get_MTVEC(void);
-extern void __set_MTVEC(uint32_t value);
-extern uint32_t __get_MSCRATCH(void);
-extern void __set_MSCRATCH(uint32_t value);
-extern uint32_t __get_MEPC(void);
-extern void __set_MEPC(uint32_t value);
-extern uint32_t __get_MCAUSE(void);
-extern void __set_MCAUSE(uint32_t value);
-extern uint32_t __get_MVENDORID(void);
-extern uint32_t __get_MARCHID(void);
-extern uint32_t __get_MIMPID(void);
-extern uint32_t __get_MHARTID(void);
-extern uint32_t __get_SP(void);
+/**
+ * Set the Machine Status Register
+ *
+ * @param value set mstatus value
+ */
+void __set_MSTATUS(uint32_t value);
+
+/**
+ * Return the Machine ISA Register
+ *
+ * @return  misa value
+ */
+uint32_t __get_MISA(void);
+
+/**
+ * Set the Machine ISA Register
+ *
+ * @param value set misa value
+ */
+void __set_MISA(uint32_t value);
+
+/**
+ * Return the Machine Trap-Vector Base-Address Register
+ *
+ * @return  mtvec value
+ */
+uint32_t __get_MTVEC(void);
+
+/**
+ * Set the Machine Trap-Vector Base-Address Register
+ *
+ * @param value set mtvec value
+ */
+void __set_MTVEC(uint32_t value);
+
+/**
+ * Return the Machine Seratch Register
+ *
+ * @return  mscratch value
+ */
+uint32_t __get_MSCRATCH(void);
+
+/**
+ * Set the Machine Seratch Register
+ *
+ * @param value set mscratch value
+ */
+void __set_MSCRATCH(uint32_t value);
+
+/**
+ * Return the Machine Exception Program Register
+ *
+ * @return  mepc value
+ */
+uint32_t __get_MEPC(void);
+
+/**
+ * Set the Machine Exception Program Register
+ */
+void __set_MEPC(uint32_t value);
+
+/**
+ * Return the Machine Cause Register
+ *
+ * @return  mcause value
+ */
+uint32_t __get_MCAUSE(void);
+
+/**
+ * Set the Machine Cause Register
+ */
+void __set_MCAUSE(uint32_t value);
+
+/**
+ * Return Vendor ID Register
+ *
+ * @return  mvendorid value
+ */
+uint32_t __get_MVENDORID(void);
+
+/**
+ * Return Machine Architecture ID Register
+ *
+ * @return  marchid value
+ */
+uint32_t __get_MARCHID(void);
+
+/**
+ * Return Machine Implementation ID Register
+ *
+ * @return  mimpid value
+ */
+uint32_t __get_MIMPID(void);
+
+/**
+ * Return Hart ID Register
+ *
+ * @return  mhartid value
+ */
+uint32_t __get_MHARTID(void);
+
+/**
+ * Return SP Register
+ *
+ * @return  SP value
+ */
+uint32_t __get_SP(void);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif/* __CORE_RISCV_H__ */
-
-
-
-
-

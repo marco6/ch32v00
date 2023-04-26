@@ -45,9 +45,6 @@ void SystemInit(void) {
     InitSysClock();
 }
 
-/**
- * Update SystemCoreClock variable according to Clock Register Values.
- */
 void SystemCoreClockUpdate (void) {
     uint32_t tmp = 0, pllsource = 0;
 

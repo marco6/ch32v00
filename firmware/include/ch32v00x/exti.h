@@ -15,27 +15,37 @@ typedef enum
 } EXTIMode_TypeDef;
 
 /* EXTI Trigger enumeration */
-typedef enum
-{
+typedef enum EXTITrigger_TypeDef {
     EXTI_Trigger_Rising = 0x08,
     EXTI_Trigger_Falling = 0x0C,
     EXTI_Trigger_Rising_Falling = 0x10
 } EXTITrigger_TypeDef;
 
 /* EXTI Init Structure definition */
-typedef struct
-{
-    uint32_t EXTI_Line; /* Specifies the EXTI lines to be enabled or disabled.
-                           This parameter can be any combination of @ref EXTI_Lines */
+typedef struct EXTI_InitTypeDef {
+    /**
+     * Specifies the EXTI lines to be enabled or disabled.
+     * This parameter can be any combination of @ref EXTI_Lines
+     */
+    uint32_t EXTI_Line;
 
-    EXTIMode_TypeDef EXTI_Mode; /* Specifies the mode for the EXTI lines.
-                                   This parameter can be a value of @ref EXTIMode_TypeDef */
+    /**
+     * Specifies the mode for the EXTI lines.
+     * This parameter can be a value of @ref EXTIMode_TypeDef
+     */
+    EXTIMode_TypeDef EXTI_Mode;
 
-    EXTITrigger_TypeDef EXTI_Trigger; /* Specifies the trigger signal active edge for the EXTI lines.
-                                         This parameter can be a value of @ref EXTIMode_TypeDef */
+    /**
+     * Specifies the trigger signal active edge for the EXTI lines.
+     * This parameter can be a value of @ref EXTIMode_TypeDef
+     */
+    EXTITrigger_TypeDef EXTI_Trigger;
 
-    FunctionalState EXTI_LineCmd; /* Specifies the new state of the selected EXTI lines.
-                                     This parameter can be set either to ENABLE or DISABLE */
+    /**
+     * Specifies the new state of the selected EXTI lines.
+     * This parameter can be set either to ENABLE or DISABLE
+     */
+    FunctionalState EXTI_LineCmd;
 } EXTI_InitTypeDef;
 
 /* EXTI_Lines */
@@ -50,14 +60,65 @@ typedef struct
 #define EXTI_Line8     ((uint32_t)0x00100) /* External interrupt line 8 Connected to the PVD Output */
 #define EXTI_Line9     ((uint32_t)0x00200) /* External interrupt line 9 Connected to the PWR Auto Wake-up event*/
 
-void       EXTI_DeInit(void);
-void       EXTI_Init(EXTI_InitTypeDef *EXTI_InitStruct);
-void       EXTI_StructInit(EXTI_InitTypeDef *EXTI_InitStruct);
-void       EXTI_GenerateSWInterrupt(uint32_t EXTI_Line);
+/**
+ * Deinitializes the EXTI peripheral registers to their default
+ * reset values.
+ */
+void EXTI_DeInit(void);
+
+/**
+ * Initializes the EXTI peripheral according to the specified
+ * parameters in the EXTI_InitStruct.
+ *
+ * @param EXTI_InitStruct pointer to a EXTI_InitTypeDef structure
+ */
+void EXTI_Init(EXTI_InitTypeDef *EXTI_InitStruct);
+
+/**
+ * Fills each EXTI_InitStruct member with its reset value.
+ *
+ * @param EXTI_InitStruct pointer to a EXTI_InitTypeDef structure
+ */
+void EXTI_StructInit(EXTI_InitTypeDef *EXTI_InitStruct);
+
+/**
+ * Generates a Software interrupt.
+ *
+ * @param EXTI_Line specifies the EXTI lines to be enabled or disabled.
+ */
+void EXTI_GenerateSWInterrupt(uint32_t EXTI_Line);
+
+/**
+ * Checks whether the specified EXTI line flag is set or not.
+ *
+ * @param EXTI_Line specifies the EXTI lines to be enabled or disabled.
+ *
+ * @return The new state of EXTI_Line (SET or RESET).
+ */
 FlagStatus EXTI_GetFlagStatus(uint32_t EXTI_Line);
-void       EXTI_ClearFlag(uint32_t EXTI_Line);
-ITStatus   EXTI_GetITStatus(uint32_t EXTI_Line);
-void       EXTI_ClearITPendingBit(uint32_t EXTI_Line);
+
+/**
+ * Clears the EXTI's line pending flags.
+ *
+ * @param EXTI_Line specifies the EXTI lines to be enabled or disabled.
+ */
+void EXTI_ClearFlag(uint32_t EXTI_Line);
+
+/**
+ * Checks whether the specified EXTI line is asserted or not.
+ *
+ * @param EXTI_Line specifies the EXTI lines to be enabled or disabled.
+ *
+ * @return The new state of EXTI_Line (SET or RESET).
+ */
+ITStatus EXTI_GetITStatus(uint32_t EXTI_Line);
+
+/**
+ * Clears the EXTI's line pending bits.
+ *
+ * @param   EXTI_Line - specifies the EXTI lines to be enabled or disabled.
+ */
+void EXTI_ClearITPendingBit(uint32_t EXTI_Line);
 
 #ifdef __cplusplus
 }

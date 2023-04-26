@@ -24,12 +24,59 @@ extern "C" {
 #define IWDG_FLAG_PVU               ((uint16_t)0x0001)
 #define IWDG_FLAG_RVU               ((uint16_t)0x0002)
 
-void       IWDG_WriteAccessCmd(uint16_t IWDG_WriteAccess);
-void       IWDG_SetPrescaler(uint8_t IWDG_Prescaler);
-void       IWDG_SetReload(uint16_t Reload);
-void       IWDG_ReloadCounter(void);
-void       IWDG_Enable(void);
+/**
+ * Enables or disables write access to IWDG_PSCR and IWDG_RLDR registers.
+ *
+ * @param WDG_WriteAccess new state of write access to IWDG_PSCR and
+ * IWDG_RLDR registers.
+ *    IWDG_WriteAccess_Enable - Enable write access to IWDG_PSCR and
+ *    IWDG_RLDR registers.
+ *    IWDG_WriteAccess_Disable - Disable write access to IWDG_PSCR
+ *    and IWDG_RLDR registers.
+ */
+void IWDG_WriteAccessCmd(uint16_t IWDG_WriteAccess);
+
+/**
+ * Sets IWDG Prescaler value.
+ *
+ * @param IWDG_Prescaler specifies the IWDG Prescaler value.
+ *    IWDG_Prescaler_4 - IWDG prescaler set to 4.
+ *    IWDG_Prescaler_8 - IWDG prescaler set to 8.
+ *    IWDG_Prescaler_16 - IWDG prescaler set to 16.
+ *    IWDG_Prescaler_32 - IWDG prescaler set to 32.
+ *    IWDG_Prescaler_64 - IWDG prescaler set to 64.
+ *    IWDG_Prescaler_128 - IWDG prescaler set to 128.
+ *    IWDG_Prescaler_256 - IWDG prescaler set to 256.
+ */
+void IWDG_SetPrescaler(uint8_t IWDG_Prescaler);
+
+/**
+ * Sets IWDG Reload value.
+ *
+ * @param Reload specifies the IWDG Reload value.
+ * This parameter must be a number between 0 and 0x0FFF.
+ */
+void IWDG_SetReload(uint16_t Reload);
+
+/**
+ * Reloads IWDG counter with value defined in the reload register.
+ */
+void IWDG_ReloadCounter(void);
+
+/**
+ * Enables IWDG (write access to IWDG_PSCR and IWDG_RLDR registers disabled).
+ */
+void IWDG_Enable(void);
+
+/**
+ * Checks whether the specified IWDG flag is set or not.
+ *
+ * @param IWDG_FLAG specifies the flag to check.
+ *    IWDG_FLAG_PVU - Prescaler Value Update on going.
+ *    IWDG_FLAG_RVU - Reload Value Update on going.
+ */
 FlagStatus IWDG_GetFlagStatus(uint16_t IWDG_FLAG);
+
 
 #ifdef __cplusplus
 }

@@ -3,14 +3,6 @@
 /* No interrupt selected */
 #define EXTI_LINENONE    ((uint32_t)0x00000)
 
-/*********************************************************************
- * @fn      EXTI_DeInit
- *
- * @brief   Deinitializes the EXTI peripheral registers to their default
- *        reset values.
- *
- * @return  none.
- */
 void EXTI_DeInit(void)
 {
     EXTI->INTENR = 0x00000000;
@@ -20,16 +12,6 @@ void EXTI_DeInit(void)
     EXTI->INTFR = 0x000FFFFF;
 }
 
-/*********************************************************************
- * @fn      EXTI_Init
- *
- * @brief   Initializes the EXTI peripheral according to the specified
- *        parameters in the EXTI_InitStruct.
- *
- * @param   EXTI_InitStruct: pointer to a EXTI_InitTypeDef structure
- *
- * @return  none.
- */
 void EXTI_Init(EXTI_InitTypeDef *EXTI_InitStruct)
 {
     uint32_t tmp = 0;
@@ -62,15 +44,6 @@ void EXTI_Init(EXTI_InitTypeDef *EXTI_InitStruct)
     }
 }
 
-/*********************************************************************
- * @fn      EXTI_StructInit
- *
- * @brief   Fills each EXTI_InitStruct member with its reset value.
- *
- * @param   EXTI_InitStruct - pointer to a EXTI_InitTypeDef structure
- *
- * @return  none.
- */
 void EXTI_StructInit(EXTI_InitTypeDef *EXTI_InitStruct)
 {
     EXTI_InitStruct->EXTI_Line = EXTI_LINENONE;
@@ -79,29 +52,11 @@ void EXTI_StructInit(EXTI_InitTypeDef *EXTI_InitStruct)
     EXTI_InitStruct->EXTI_LineCmd = DISABLE;
 }
 
-/*********************************************************************
- * @fn      EXTI_GenerateSWInterrupt
- *
- * @brief   Generates a Software interrupt.
- *
- * @param   EXTI_Line - specifies the EXTI lines to be enabled or disabled.
- *
- * @return  none.
- */
 void EXTI_GenerateSWInterrupt(uint32_t EXTI_Line)
 {
     EXTI->SWIEVR |= EXTI_Line;
 }
 
-/*********************************************************************
- * @fn      EXTI_GetFlagStatus
- *
- * @brief   Checks whether the specified EXTI line flag is set or not.
- *
- * @param   EXTI_Line - specifies the EXTI lines to be enabled or disabled.
- *
- * @return  The new state of EXTI_Line (SET or RESET).
- */
 FlagStatus EXTI_GetFlagStatus(uint32_t EXTI_Line)
 {
     FlagStatus bitstatus = RESET;
@@ -116,29 +71,11 @@ FlagStatus EXTI_GetFlagStatus(uint32_t EXTI_Line)
     return bitstatus;
 }
 
-/*********************************************************************
- * @fn      EXTI_ClearFlag
- *
- * @brief   Clears the EXTI's line pending flags.
- *
- * @param   EXTI_Line - specifies the EXTI lines to be enabled or disabled.
- *
- * @return  None
- */
 void EXTI_ClearFlag(uint32_t EXTI_Line)
 {
     EXTI->INTFR = EXTI_Line;
 }
 
-/*********************************************************************
- * @fn      EXTI_GetITStatus
- *
- * @brief   Checks whether the specified EXTI line is asserted or not.
- *
- * @param   EXTI_Line - specifies the EXTI lines to be enabled or disabled.
- *
- * @return  The new state of EXTI_Line (SET or RESET).
- */
 ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
 {
     ITStatus bitstatus = RESET;
@@ -156,15 +93,6 @@ ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
     return bitstatus;
 }
 
-/*********************************************************************
- * @fn      EXTI_ClearITPendingBit
- *
- * @brief   Clears the EXTI's line pending bits.
- *
- * @param   EXTI_Line - specifies the EXTI lines to be enabled or disabled.
- *
- * @return  none
- */
 void EXTI_ClearITPendingBit(uint32_t EXTI_Line)
 {
     EXTI->INTFR = EXTI_Line;

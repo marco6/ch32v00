@@ -7,6 +7,9 @@
  extern "C" {
 #endif 
 
+/**
+ * Update SystemCoreClock variable according to Clock Register Values.
+ */
 void SystemCoreClockUpdate(void);
 
 /**

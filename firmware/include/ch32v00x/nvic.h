@@ -44,7 +44,7 @@ typedef enum IRQn
     TIM2_IRQn = 38,          /* TIM2 global Interrupt                                */
 } IRQn_Type;
 
-typedef struct {
+typedef struct NVIC_InitTypeDef {
   uint8_t NVIC_IRQChannel;
   uint8_t NVIC_IRQChannelPreemptionPriority;
   uint8_t NVIC_IRQChannelSubPriority;
@@ -61,16 +61,16 @@ typedef struct {
  * Configures the priority grouping - pre-emption priority and subpriority.
  *
  * @param NVIC_PriorityGroup specifies the priority grouping bits length.
- * NVIC_PriorityGroup_0 - 0 bits for pre-emption priority
- *                        4 bits for subpriority
- * NVIC_PriorityGroup_1 - 1 bits for pre-emption priority
- *                        3 bits for subpriority
- * NVIC_PriorityGroup_2 - 2 bits for pre-emption priority
- *                        2 bits for subpriority
- * NVIC_PriorityGroup_3 - 3 bits for pre-emption priority
- *                        1 bits for subpriority
- * NVIC_PriorityGroup_4 - 4 bits for pre-emption priority
- *                        0 bits for subpriority
+ *     NVIC_PriorityGroup_0 - 0 bits for pre-emption priority
+ *     4 bits for subpriority
+ *     NVIC_PriorityGroup_1 - 1 bits for pre-emption priority
+ *     3 bits for subpriority
+ *     NVIC_PriorityGroup_2 - 2 bits for pre-emption priority
+ *     2 bits for subpriority
+ *     NVIC_PriorityGroup_3 - 3 bits for pre-emption priority
+ *     1 bits for subpriority
+ *     NVIC_PriorityGroup_4 - 4 bits for pre-emption priority
+ *     0 bits for subpriority
  */
 void NVIC_PriorityGroupConfig(uint32_t NVIC_PriorityGroup);
 

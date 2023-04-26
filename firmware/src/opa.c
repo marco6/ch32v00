@@ -1,29 +1,11 @@
 #include <ch32v00x/opa.h>
 
 
-/*********************************************************************
- * @fn      OPA_DeInit
- *
- * @brief   Deinitializes the OPA peripheral registers to their default
- *        reset values.
- *
- * @return  none
- */
 void OPA_DeInit(void)
 {
     EXTEN->EXTEN_CTR &= ~(uint32_t)(7 << 16);
 }
 
-/*********************************************************************
- * @fn      OPA_Init
- *
- * @brief   Initializes the OPA peripheral according to the specified
- *        parameters in the OPA_InitStruct.
- *
- * @param   OPA_InitStruct - pointer to a OPA_InitTypeDef structure
- *
- * @return  none
- */
 void OPA_Init(OPA_InitTypeDef *OPA_InitStruct)
 {
     uint32_t tmp = 0;
@@ -33,31 +15,12 @@ void OPA_Init(OPA_InitTypeDef *OPA_InitStruct)
     EXTEN->EXTEN_CTR = tmp;
 }
 
-/*********************************************************************
- * @fn      OPA_StructInit
- *
- * @brief   Fills each OPA_StructInit member with its reset value.
- *
- * @param   OPA_StructInit - pointer to a OPA_InitTypeDef structure
- *
- * @return  none
- */
 void OPA_StructInit(OPA_InitTypeDef *OPA_InitStruct)
 {
     OPA_InitStruct->PSEL = CHP0;
     OPA_InitStruct->NSEL = CHN0;
 }
 
-/*********************************************************************
- * @fn      OPA_Cmd
- *
- * @brief   Enables or disables the specified OPA peripheral.
- *
- * @param   OPA_NUM - Select OPA
- *            NewState - ENABLE or DISABLE.
- *
- * @return  none
- */
 void OPA_Cmd(FunctionalState NewState)
 {
     if(NewState == ENABLE)
